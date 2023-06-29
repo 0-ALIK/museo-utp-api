@@ -60,6 +60,39 @@ Si todo sale bien, responde enviando los datos del usuario logueado junto con su
 
 Si algo sale mal, responde con un código de status *400*
 
+### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/facultades/all
+
+Obtener todas las facultades
+
+#### Ejemplo de respuesta (application/json)
+
+```json
+[
+    {
+        "id": "...",
+        "nombre": "..."
+    },
+    ...
+]
+```
+
+### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/carreras/all
+
+Obtener todas las facultades
+
+#### Ejemplo de respuesta (application/json)
+
+```json
+[
+    {
+        "id": "...",
+        "nombre": "...",
+        "facultad_id": "..."
+    },
+    ...
+]
+```
+
 ### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/usuarios/all
 
 Obtener todos los usuarios de la base de datos
