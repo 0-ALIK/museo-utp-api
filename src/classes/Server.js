@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const { facultades, carreras. estudiantes } = require('../routes');
+const { facultades, carreras, estudiantes } = require('../routes');
 
 /**
  * Esta clase engloba toda la lógica y configuración del servidor
