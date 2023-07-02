@@ -8,7 +8,8 @@ const getAll = async (req = request, res = response) => {
 
 const getbyId = async (req = request, res = response) => {
     const id = req.params.id;
-    const [result] = await conecction.query('SELECT * FROM Estudiante WHERE id_estudiante = ?', [id]);
+    const consulta = 'SELECT * FROM Estudiante WHERE id_estudiante = ?';
+    const [result] = await conecction.query(consulta, [id]);
     res.json(result);
 };
 

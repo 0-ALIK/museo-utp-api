@@ -7,9 +7,9 @@ router.get('/all', getAll);
 
 router.get('/:id', getbyId);
 
-router.put('/modificar/:id', putbyId);
+router.put('/:id', putbyId);
 
-router.post('/agregar',postEstudiante);
+router.post('/',postEstudiante);
 
 router.delete('/:id', dlbyId);
 
