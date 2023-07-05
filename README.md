@@ -50,7 +50,7 @@ Será incluso más útil para los administradores ya que en la **web administrat
 
 | Data |
 | ------------ |
-| `usuario` - *obligatorio* |
+| `nombre_usuario` - *obligatorio* |
 | `password` - *obligatorio* |
 
 #### Ejemplo de respuesta (application/json)
@@ -422,8 +422,8 @@ Note que los objetos de tipo artículo que vienen en este arreglo no cuentan con
         "created_at": "...",
         "updated_at": "...",
         "fotos": [
-            "x.jpg",
-            "y.jpg"
+            { "id": "...", "url": "x.jpg" },
+            { "id": "...", "url": "x.jpg" }
         ]
     },
     ...
@@ -459,14 +459,14 @@ Acá, al obtener un artículo en específico, si retornamos todos los datos
     "created_at": "...",
     "updated_at": "...",
     "fotos": [
-        "x.jpg",
-        "y.jpg"
+        { "id": "...", "url": "x.jpg" },
+        { "id": "...", "url": "y.jpg" }
     ],
     "videos": [
-        "x.mp4"
+        { "id": "...", "url": "x.mp4" }
     ],
     "audios": [
-        "x.mp3"
+        { "id": "...", "url": "x.mp3" }
     ]
 }
 ```

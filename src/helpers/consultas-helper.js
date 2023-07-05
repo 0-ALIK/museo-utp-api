@@ -1,27 +1,29 @@
 const consultas = {
-    usuarioById: `
+    usuarioByAnyWhere: `
     SELECT 
-        id_usuario AS id,
+        id_usuario as id,
+        nombre_usuario,
+        contrasena as password,
         rol,
-        nombre,
-        apellido,
-        cedula,
-        foto,
         created_at,
-        updated_at 
-    FROM usuario WHERE id_usuario = ?`,
+        updated_at
+    FROM usuario `,
 
-    estudianteById: `
+    estudianteByAnyWhere: `
     SELECT
+        es.id_estudiante as id,
+        es.nombre,
+        es.apellido,
+        es.cedula,
         es.nivel,
-        ca.nombre as carrera,
-        fa.nombre as facultad
-    FROM estudiante AS es
-    JOIN carrera AS ca
-    ON es.carrera_id = ca.id_carrera
-    JOIN facultad AS fa
+        es.foto,
+        fa.nombre as facultad,
+        ca.nombre as carrera
+    FROM estudiante as es
+    JOIN facultad as fa
     ON fa.id_facultad = es.facultad_id
-    WHERE es.usuario_id = ?`,
+    JOIN carrera as ca
+    ON ca.id_carrera = es.carrera_id `,
     
 };
 

@@ -3,6 +3,11 @@ const connection = require('../config/connection');
 const consultas = require('./consultas-helper');
 const { JWT_SECRET } = process.env;
 
+/**
+ * Genera un nuevo jwt de sesión para un usuario a partir de su id
+ * @param {*} id 
+ * @returns 
+ */
 const generarJWT = ( id = '' ) => {
 
     return new Promise( (resolve, reject) => {
@@ -30,7 +35,7 @@ const validarJWT = async (token = '') => {
     try {
         const { id } = jwt.verify( token, JWT_SECRET );
 
-        const [ result ] = connection.query( consultas.usuarioById, [id] );
+        const [ result ] = connection.query( consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', [id] );
 
         const usuario = result[0]; 
 
@@ -40,11 +45,17 @@ const validarJWT = async (token = '') => {
 
         if(usuario.rol === 'ESTUD') {
         
-            const [ result2 ] = connection.query( consultas.estudianteById, [usuario.id] );
+            const [ result2 ] = connection.query( consultas.estudianteById + 'WHERE es.usuario_id = ?', [usuario.id] );
 
+            usuario.id = result2[0].id;
             usuario.nivel = result2[0].nivel;
             usuario.carrera = result2[0].carrera;
             usuario.facultad = result2[0].facultad;
+            usuario.facultad = result2[0].nombre;
+            usuario.facultad = result2[0].apellido;
+            usuario.facultad = result2[0].cedula;
+            usuario.facultad = result2[0].nivel;
+            usuario.facultad = result2[0].foto;
         }
 
         return { usuario };
