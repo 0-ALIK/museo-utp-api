@@ -1,9 +1,10 @@
 const { request, response } = require('express');
-const conecction = require('../config/conecction');
+const connection = require('../config/connection');
 
-const getAll = async (req = request, res = response) => {
-    const [result] = await conecction.query('SELECT * FROM Facultad');
-    res.json(result);
+const getAll = async ( req = request, res = response ) => {
+    const consulta = 'SELECT * FROM Facultad';
+    const [ result ] = await connection.query( consulta );
+    res.json( result );
 };
 
 module.exports = {

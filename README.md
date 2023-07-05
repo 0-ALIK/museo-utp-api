@@ -131,6 +131,7 @@ Obtener todos los usuarios de la base de datos
 | Param | Descripción |
 | ------------ | ------------ |
 | `limit` - *opcional* | Especifica el límite de resultados en la respuesta |
+| `page` - *opcional* | Para la paginación |
 | `query` - *opcional* | Hace que sólo hagan match los registros que conicidan con el query de búsqueda |
 
 #### Ejemplo de respuesta (application/json)
@@ -138,17 +139,20 @@ Obtener todos los usuarios de la base de datos
 Si todo sale bien, responde con un arreglo de usuarios de tipo ESTUD junto con un código de status **200**
 
 ```json
-[
-    {
-        "id": "...",
-        "usuario": "...",
-        "rol": "...",
-        "created_at": "...",
-        "updated_at": "...",
+{
+    "cantidad": "...",
+    "usuarios": [
+        {
+            "id": "...",
+            "usuario": "...",
+            "rol": "...",
+            "created_at": "...",
+            "updated_at": "...",
+            ...
+        },
         ...
-    },
-    ...
-]
+    ]
+}
 ```
 
 Si algo sale mal, responde con un código de status *400*
@@ -400,6 +404,7 @@ Retorna todos los artículos de la base de datos
 | Param | Descripción |
 | ------------ | ------------ |
 | `limit` - *opcional* | Especifica el límite de resultados en la respuesta |
+| `page` - *opcional* | Para la paginación |
 | `query` - *opcional* | Hace que sólo hagan match los registros que conicidan con el query de búsqueda |
 
 #### Ejemplo de respuesta (application/json)
