@@ -1,7 +1,7 @@
 {
   "name": "museo-utp-api",
   "version": "0.0.1",
-  "description": "",
+  "description": "¡Bienvenido al repositorio del API del Museo Interactivo UTP! Este proyecto tiene como objetivo desarrollar el API del museo interactivo para la Universidad Tecnológica de Panamá, utilizando tecnologías como Node.js y Express.",
   "main": "app.js",
   "scripts": {
     "start": "node .\\src\\app.js",
@@ -12,7 +12,7 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.1.4",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
     "express-validator": "^7.0.1",
@@ -22,5 +22,8 @@
   "devDependencies": {
     "jest": "^29.5.0",
     "supertest": "^6.3.3"
+  },
+  "directories": {
+    "test": "test"
   }
 }

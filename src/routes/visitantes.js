@@ -1,14 +1,17 @@
 const { Router } = require('express');
-const { getbyId, postVisitante } = require('../controllers/visitantes');
+const { getVisitante, postVisitante } = require('../controllers/visitantes');
+const { mostrarErrores, validarJWTMiddleware } = require('../middlewares');
+
 
 const router = Router();
 
 router.get('/:id', [
-    //Middlewares
-], getbyId);
+    mostrarErrores
+], getVisitante);
 
 router.post('/:id', [
-    //Middlewares
+    mostrarErrores,
+    validarJWTMiddleware
 ], postVisitante);
 
 module.exports = router;

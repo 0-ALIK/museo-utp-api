@@ -1,22 +1,21 @@
 const { request, response } = require('express');
-const conecction = require('../config/conecction');
+const connection = require('../config/connection');
+const consulta = require('../helpers/consultas-helper');
 
-const getbyId = async (req = request, res = response) => {
+const getVisitante = async (req = request, res = response) => {
     const id = req.params.id;
-    const consulta = 'SELECT * FROM visitante WHERE articulo_id = ?';
-    const [result] = await conecction.query(consulta, [id]);
+    const [result, metadato] = await connection.query(consulta.visitanteById, [id]);
     res.status(200).json(result);
 };
 
 const postVisitante = async (req = request, res = response)=>{
-    const estudiante = req.headers; //token, nose como agarrarlo xdd, ni toy seguro de los ids
+    const estudiante = req.usuarioAuth;
     const articulo = req.params.id;
-    const consulta = 'INSERT INTO visitante (estudiante_id, articulo_id) VALUES(?, ?)'
-    const [] = await conecction.query(consulta, [estudiante, articulo])
+    const [] = await connection.query(consulta, [estudiante, articulo])
     res.status(201).send("POST de visitante");
 }
 
 module.exports = {
-    getbyId,
+    getVisitante,
     postVisitante
 }
