@@ -24,7 +24,21 @@ const consultas = {
     ON fa.id_facultad = es.facultad_id
     JOIN carrera as ca
     ON ca.id_carrera = es.carrera_id `,
-    
+
+    postUsuario: `
+        INSERT INTO usuario (nombre_usuario, contrasena, rol)
+        VALUES (?, ?, ?)
+    `,
+
+    postEsudiante:`
+        INSERT INTO estudiante (nombre, apellido, cedula, nivel, facultad_id, carrera_id, foto)
+        VALUES(?, ?, ?, ?, ? ,? ,?)
+    `,
+
+    putUsuario: `
+        UPDATE usuario
+        SET nombre_usuario = ?
+    `
 };
 
 module.exports = consultas;
