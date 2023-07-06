@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const { facultades, carreras, estudiantes } = require('../routes');
+const { facultades, carreras, estudiantes, auth } = require('../routes');
 
 /**
  * Esta clase engloba toda la lógica y configuración del servidor
@@ -20,8 +20,7 @@ class Server {
         // definición de los endpoints de la API
         this.paths = {
             facultades: "/api/facultades",
-            carreras: "/api/carreras",
-            estudiantes: "/api/estudiantes"
+            carreras: "/api/carreras"
         };
 
         this.middlewares();
@@ -49,7 +48,6 @@ class Server {
         });
         this.app.use(this.paths.facultades, facultades);
         this.app.use(this.paths.carreras, carreras);
-        this.app.use(this.paths.estudiantes, estudiantes);
     }
 
     /**
