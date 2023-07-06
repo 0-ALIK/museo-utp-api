@@ -30,7 +30,7 @@ const consultas = {
         VALUES (?, ?, ?)
     `,
 
-    postEsudiante:`
+    postEstudiante:`
         INSERT INTO estudiante (nombre, apellido, cedula, nivel, facultad_id, carrera_id, foto)
         VALUES(?, ?, ?, ?, ? ,? ,?)
     `,
