@@ -7,7 +7,6 @@ const auth = require('./auth');
 module.exports = {
     facultades,
     carreras,
-    estudiantes,
     usuarios,
     auth
 };
