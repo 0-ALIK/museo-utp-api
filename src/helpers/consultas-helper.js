@@ -23,6 +23,43 @@ const consultas = {
     ON fa.id_facultad = es.facultad_id
     WHERE es.usuario_id = ?`,
     
+    getAllArticulos: `
+    SELECT id_articulo as id, 
+    nombre, 
+    categoria_id,
+    descripcion, 
+    created_at, 
+    updated_at 
+    FROM articulo
+    limit ? 
+    offset ?`,
+
+    getAllArticulosByName: `
+    SELECT * 
+    FROM articulo
+    WHERE nombre LIKE ?`,
+
+    getArticuloFotos: `
+    SELECT * 
+    FROM multimedio
+    WHERE tipo like 'imagen' 
+    and articulo_id = ?`,
+
+    getArticuloById: `
+    SELECT * 
+    FROM articulo 
+    WHERE id_articulo = ?`,
+
+    getArticuloByIdMultimedios: `
+    SELECT 
+    id_multimedio, 
+    url, tipo 
+    FROM multimedio 
+    WHERE articulo_id = ?`,
+
+    insertArtciculo:`
+    INSERT INTO articulo()
+    `
 };
 
 module.exports = consultas;
