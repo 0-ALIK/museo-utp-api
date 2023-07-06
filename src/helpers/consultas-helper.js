@@ -48,6 +48,18 @@ const consultas = {
     ON ca.id_carrera = es.carrera_id
     WHERE ar.id_articulo = ?`,
 
+    insertVisita: `
+    INSERT INTO 
+        visitante(estudiante_id, articulo_id)
+    VALUES
+        (?, ?)`,
+        
+    getLastVisitante: `
+    SELECT
+        *
+    FROM visitante
+    WHERE id_visitante = LAST_INSERT_ID()`
+
 };
 
 module.exports = consultas;
