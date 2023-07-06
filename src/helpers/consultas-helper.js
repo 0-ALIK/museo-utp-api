@@ -26,7 +26,7 @@ const consultas = {
     ON ca.id_carrera = es.carrera_id `,
 
     postUsuario: `
-        INSERT INTO usuario (nombre_usuario, contrasena, rol)
+        INSERT INTO usuario (nombre_usuario, contrasena)
         VALUES (?, ?, ?)
     `,
 
@@ -38,6 +38,10 @@ const consultas = {
     putUsuario: `
         UPDATE usuario
         SET nombre_usuario = ?
+    `,
+
+    deleteUsuario:`
+        DELETE FROM usuario
     `
 };
 
