@@ -1,30 +1,39 @@
+//Librerias (Express, Connection, consultas-helper, jwt-helpers, bcrypt)
 const {response, request} = require('express');
 const connection = require('../config/connection');
 const consultas = require('../helpers/consultas-helper');
 const {validarJWT} = require('../helpers/jwt-helpers');
 const bcrypt = require('bcrypt');
 
+//Mostrar todos los usuario
 const getAll = async (req = request, res = response) =>{
+    
+    //consulta de todos los estudiantes
     const [result] = await connection.query(consultas.usuarioByAnyWhere);
-    res.json(result);
+    res.status(200).json(result);
 }
 
+//Mostrar un usuario en base a su ID
 const getById = async (req = request, res = response) =>{
     const id = req.params.id;
+
+    //consulta de un usuario segun ID
     const [result] = await connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', id);
-    res.json(result);
+    res.status(200).json(result);
 }
 
+//postear un usuario
 const postUsuario = async (req = request, res = response) => { 
-    const {nombreUsuario, contraseñaUsuario, rol, nombre, apellido, } = req.body;
+    const {nombreUsuario, password, rol, nombre, apellido, } = req.body;
 
-    //hasheo de contraseña que sera almacenada en la base de datos
-    const hashPassword = bcrypt.hash(contraseñaUsuario,10);
+    //Hasheo de contrasena que sera almacenada en la base de datos
+    const salt = bcrypt.genSaltSync()
+    const hashPassword = bcrypt.hashSync(password, salt);
 
-    const [result] = await connection.query(consultas.postUsuario, [nombreUsuario, hashPassword, rol])
+    const [result] = await connection.query(consultas.postUsuario, [nombreUsuario, hashPassword])
     const usuario = result[0];
 
-    //En caso de ser estudiante se almacenan los datos, sino, no entraria en el query de insertar estudiante;
+    //En caso de ser estudiante se almacenan los datos, sino, no entraria en el query de insertar estudiante
     if(usuario.rol === 'estud'){
         const {nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto} = req.body;
 
@@ -41,23 +50,41 @@ const postUsuario = async (req = request, res = response) => {
      res.status(201).json(usuario)
 }
 
+//Modificar datos de un usuario
 const putUsuario = async (req = request, res = response) =>{
-    const tokenUser = req.header('x-token');
-    const usuario = await validarJWT(tokenUser);
+    const usuario = req.usuarioAuth;
 
     if(!usuario){
-        return res.status(404).json('No se encontro el usuario');
+        return res.status(404).json({
+            mensaje: 'Error: No se encontro el usuario'
+        })
     }
-    // contrasena, rol. No deberian ir?
+
     const {usuarioNombre, nombre, apellido,  cedula, nivel, id_facultad, id_carrera, foto} = req.body; 
 
+    //Query para postear un usuario
     const [result] = await connection.query(consultas.putUsuario + 'WHERE id_usuario = ?',[usuarioNombre, usuario.id])
 
-    res.status(202).json('Usuario Actualizado');
+    res.status(202).json({
+        mensaje: 'Usuario Creado'
+    });
 }
 
-//TODO: por hacer
+//Eliminar un usuario
 const deleteUsuario = async (req = request, res = response) =>{
+    const usuario = req.usuarioAuth;
+
+    if(!usuario){
+        return res.status(404).json({
+            mensaje: 'Error: No se encontro el usuario'
+        })
+    }
+
+    //Query para eliminar un usuario
+    const [result] = connection.query(consultas.deleteUsuario + 'WHERE id_usuario = ?', [usuario.id]);
+    res.status(202).json({
+        mensaje: 'Usuario Creado'
+    })
 
 }
 
