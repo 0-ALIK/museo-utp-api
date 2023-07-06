@@ -18,7 +18,7 @@ const getById = async (req = request, res = response) =>{
     const id = req.params.id;
 
     //consulta de un usuario segun ID
-    const [result] = await connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', id);
+    const [result] = await connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', [id]);
     res.status(200).json(result);
 }
 
@@ -37,7 +37,7 @@ const postUsuario = async (req = request, res = response) => {
     if(usuario.rol === 'estud'){
         const {nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto} = req.body;
 
-        const [result2] = await connection.query(consultas.postEsudiante,[nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto]);
+        const [result2] = await connection.query(consultas.postEstudiante,[nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto]);
         
         usuario.nombre = result2[0].nombre;
         usuario.apellido = result2[0].apellido;
@@ -66,7 +66,7 @@ const putUsuario = async (req = request, res = response) =>{
     const [result] = await connection.query(consultas.putUsuario + 'WHERE id_usuario = ?',[usuarioNombre, usuario.id])
 
     res.status(202).json({
-        mensaje: 'Usuario Creado'
+        mensaje: 'Usuario Actualizado'
     });
 }
 
@@ -81,9 +81,9 @@ const deleteUsuario = async (req = request, res = response) =>{
     }
 
     //Query para eliminar un usuario
-    const [result] = connection.query(consultas.deleteUsuario + 'WHERE id_usuario = ?', [usuario.id]);
+    const [result] = await connection.query(consultas.deleteUsuario + 'WHERE id_usuario = ?', [usuario.id]);
     res.status(202).json({
-        mensaje: 'Usuario Creado'
+        mensaje: 'Usuario Eliminado'
     })
 
 }
