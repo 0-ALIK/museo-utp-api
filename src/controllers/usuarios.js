@@ -23,47 +23,57 @@ const getById = async (req = request, res = response) =>{
 }
 
 //postear un usuario
-const postUsuario = async (req = request, res = response) => { 
-    const {nombreUsuario, password, rol, nombre, apellido, } = req.body;
+const postUsuario = async (req = request, res = response) => {
+
+    const {nombre_usuario, password, nombre, apellido, nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto} = req.body;
 
     //Hasheo de contrasena que sera almacenada en la base de datos
     const salt = bcrypt.genSaltSync()
     const hashPassword = bcrypt.hashSync(password, salt);
 
-    const [result] = await connection.query(consultas.postUsuario, [nombreUsuario, hashPassword])
+    //Query para postear los datos de un usuario
+    await connection.query(consultas.postUsuario, [nombre_usuario, hashPassword])
+
+    //Query para consultar los datos de un usuario
+    const [result] = connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = LAST_INSERT_ID()');
     const usuario = result[0];
 
-    //En caso de ser estudiante se almacenan los datos, sino, no entraria en el query de insertar estudiante
-    if(usuario.rol === 'estud'){
-        const {nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto} = req.body;
+    //Query para postear los datos de un estudiante
+    await connection.query(consultas.postEstudiante,[nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto]);
 
-        const [result2] = await connection.query(consultas.postEstudiante,[nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto]);
-        
-        usuario.nombre = result2[0].nombre;
-        usuario.apellido = result2[0].apellido;
-        usuario.cedula = result2[0].cedula;
-        usuario.nivel = result2[0].nivel;
-        usuario.facultad = result2[0].facultad;
-        usuario.carrera = result2[0].carrera;
-        usuario.foto = result2[0].foto;
-     }
+    //Query para consultar los datos de un estudiante
+    const [result2] = connection.query(consultas.estudianteByAnyWhere + 'WHERE id_usuario = LAST_INSERT_ID()');
+
+    usuario.nombre = result2[0].nombre;
+    usuario.apellido = result2[0].apellido;
+    usuario.cedula = result2[0].cedula;
+    usuario.nivel = result2[0].nivel;
+    usuario.facultad = result2[0].facultad;
+    usuario.carrera = result2[0].carrera;
+    usuario.foto = result2[0].foto;
+
      res.status(201).json(usuario)
 }
 
 //Modificar datos de un usuario
 const putUsuario = async (req = request, res = response) =>{
+
+    // datos extraidos por el req.usuarioAuth
     const usuario = req.usuarioAuth;
 
+    // datos extraidos por el req.body
+    const {usuarioNombre, nombre, apellido,  cedula, nivel, id_facultad, id_carrera, foto} = req.body; 
+
+    //Verificar que el usuario no este vacio
     if(!usuario){
         return res.status(404).json({
             mensaje: 'Error: No se encontro el usuario'
         })
     }
 
-    const {usuarioNombre, nombre, apellido,  cedula, nivel, id_facultad, id_carrera, foto} = req.body; 
-
     //Query para postear un usuario
-    const [result] = await connection.query(consultas.putUsuario + 'WHERE id_usuario = ?',[usuarioNombre, usuario.id])
+    await connection.query(consultas.putUsuario + 'WHERE id_usuario = ?',[usuarioNombre, usuario.id])
+    const [result] = connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', [usuario.id]);
 
     res.status(202).json({
         mensaje: 'Usuario Actualizado'
@@ -74,16 +84,21 @@ const putUsuario = async (req = request, res = response) =>{
 const deleteUsuario = async (req = request, res = response) =>{
     const usuario = req.usuarioAuth;
 
+    //Verificar que el usuario no este vacio
     if(!usuario){
         return res.status(404).json({
             mensaje: 'Error: No se encontro el usuario'
         })
     }
 
+    //Query para consultar los datos de un usuario
+    const [result] = connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?',[usuario.id]);
+
     //Query para eliminar un usuario
-    const [result] = await connection.query(consultas.deleteUsuario + 'WHERE id_usuario = ?', [usuario.id]);
+    await connection.query(consultas.deleteUsuario + 'WHERE id_usuario = ?', [usuario.id]);
+
     res.status(202).json({
-        mensaje: 'Usuario Eliminado'
+        mensaje: 'Usuario Eliminado',result
     })
 
 }
