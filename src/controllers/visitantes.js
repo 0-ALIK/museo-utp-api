@@ -11,7 +11,7 @@ const getVisitante = async (req = request, res = response) => {
 const postVisitante = async (req = request, res = response)=>{
     const estudiante = req.usuarioAuth;
     const articulo = req.params.id;
-    const [] = await connection.query(consulta.insertVisita, [estudiante, articulo]);
+    const [] = await connection.query(consulta.insertVisita, [estudiante.id, articulo]);
     const [result, metadato] = await connection.query(consulta.getLastVisitante);
     res.status(201).json(result);
 }
