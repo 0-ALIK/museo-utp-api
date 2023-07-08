@@ -48,7 +48,13 @@ const consultas = {
     and articulo_id = ?`,
 
     getArticuloById: `
-    SELECT * 
+    SELECT
+    id_articulo as id, 
+    nombre, 
+    categoria_id,
+    descripcion, 
+    created_at, 
+    updated_at  
     FROM articulo 
     WHERE id_articulo = ?`,
 
@@ -59,9 +65,36 @@ const consultas = {
     FROM multimedio 
     WHERE articulo_id = ?`,
 
-    insertArtciculo:`
-    INSERT INTO articulo()
-    `
+    insertArticulo:`
+    INSERT INTO articulo(nombre, descripcion, categoria_id)
+    VALUES(?, ?, ?)`,   
+
+    getInsertedId:`select max(id_articulo) as id 
+    from articulo`,
+
+    insertMultimedio:`
+    INSERT INTO multimedio(url, tipo, articulo_id)
+    VALUES(?, ?, ?)`,
+    
+    getMultimediosUrl:`SELECT url 
+    FROM multimedio 
+    where id_multimedio = ?`,
+
+    deleteMultimedio:`
+    delete from multimedio where id_multimedio = ?
+    `,
+
+    deleteArticulo:`
+    delete from articulo where id_articulo = ?
+    `,
+
+    updateArticulo:`UPDATE articulo 
+    set nombre = ?, descripcion = ?, categoria_id = ?
+    where id_articulo = ?`,
+
+    getAllMultimediosId: `select id_multimedio as id
+     from multimedio 
+     where articulo_id = ?`,
 };
 
 module.exports = consultas;
