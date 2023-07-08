@@ -60,8 +60,27 @@ const consultas = {
     SELECT
         *
     FROM visitante
-    WHERE id_visitante = LAST_INSERT_ID()`
+    WHERE id_visitante = LAST_INSERT_ID()`,
 
+
+    postUsuario: `
+        INSERT INTO usuario (nombre_usuario, contrasena)
+        VALUES (?, ?, ?)
+    `,
+
+    postEstudiante:`
+        INSERT INTO estudiante (nombre, apellido, cedula, nivel, facultad_id, carrera_id, foto)
+        VALUES(?, ?, ?, ?, ? ,? ,?)
+    `,
+
+    putUsuario: `
+        UPDATE usuario
+        SET nombre_usuario = ?
+    `,
+
+    deleteUsuario:`
+        DELETE FROM usuario
+    `
 };
 
 module.exports = consultas;
