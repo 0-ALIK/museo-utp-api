@@ -36,6 +36,8 @@ web_modules/
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+.vscode/
+.vscode
 
 # notas
 notas.txt
