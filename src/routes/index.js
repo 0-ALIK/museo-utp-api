@@ -1,6 +1,7 @@
 const facultades = require('./facultades');
 const carreras = require('./carreras');
 const usuarios = require('./usuarios');
+const articulos = require('./articulos');
 const auth = require('./auth');
 const visitantes = require('./visitantes');
 
@@ -9,5 +10,6 @@ module.exports = {
     carreras,
     visitantes,
     usuarios,
+    articulos,
     auth
 };

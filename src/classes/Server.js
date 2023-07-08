@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const { facultades, carreras, auth, visitantes, usuarios } = require('../routes');
+const { facultades, carreras, auth, visitantes, usuarios, articulos } = require('../routes');
 
 /**
  * Esta clase engloba toda la lógica y configuración del servidor
@@ -24,7 +24,8 @@ class Server {
             auth: "/api/auth/login",
             visitantes: "/api/visitantes",
             usuarios: "/api/usuarios",
-            auth: "/api/auth/login"
+            auth: "/api/auth/login",
+            articulos: "/api/articulos"
         };
 
         this.middlewares();
@@ -37,10 +38,7 @@ class Server {
     middlewares() {
         this.app.use( cors() );
         this.app.use( express.json() );
-        this.app.use( fileUpload({
-            useTempFiles : true,
-            tempFileDir : '/tmp/'
-        }) );
+        this.app.use( fileUpload() );
     }
 
     /**
@@ -55,6 +53,7 @@ class Server {
         this.app.use(this.paths.usuarios, usuarios);
         this.app.use(this.paths.auth, auth);
         this.app.use(this.paths.visitantes, visitantes);
+        this.app.use(this.paths.articulos, articulos);
     }
 
     /**
