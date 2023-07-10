@@ -21,7 +21,7 @@ router.post('/usuarios',[
     check('nivel', 'No puede estar nulo').notEmpty(),
     check('id_facultad', 'No puede estar nulo').notEmpty(),
     check('id_carrera', 'No puede estar nulo').notEmpty(),
-    mostrarErrores
+    
 ],postUsuario);
 
 //Ruta para modificar un usuario

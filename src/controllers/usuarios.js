@@ -25,7 +25,7 @@ const getById = async (req = request, res = response) =>{
 //postear un usuario
 const postUsuario = async (req = request, res = response) => {
 
-    const {nombre_usuario, password, nombre, apellido, nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto} = req.body;
+    const {nombre_usuario, password, nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto} = req.body;
 
     //Hasheo de contrasena que sera almacenada en la base de datos
     const salt = bcrypt.genSaltSync()
