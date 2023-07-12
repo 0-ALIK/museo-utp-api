@@ -10,8 +10,16 @@ const consulta = require('../helpers/consultas-helper');
  */
 const getVisitante = async (req = request, res = response) => {
   const id = req.params.id;
-  const [resultado, metadato] = await connection.query(consulta.visitanteById, [id]);
-  res.status(200).json(resultado);
+  
+  try {
+    const [ resultado ] = await connection.query(consulta.visitanteById, [id]);
+    res.status(200).json(resultado);
+  } catch (error) {
+    res.status(500).json({
+      msg: 'no se puedo obtener todos los visitantes del artículo con id: '+id,
+      error
+    });
+  }
 };
 
 /**
@@ -23,9 +31,19 @@ const getVisitante = async (req = request, res = response) => {
 const postVisitante = async (req = request, res = response) => {
   const estudiante = req.usuarioAuth;
   const articulo = req.params.id;
-  await connection.query(consulta.insertVisita, [estudiante.id, articulo]);
-  const [resultado, metadato] = await connection.query(consulta.getLastVisitante);
-  res.status(201).json(resultado);
+
+  try {
+
+    await connection.query(consulta.insertVisita, [estudiante.id, articulo]);
+    const [resultado] = await connection.query(consulta.getLastVisitante);
+    res.status(201).json(resultado[0]);
+
+  } catch (error) {
+    res.status(500).json({
+      msg: 'no se pudo realizar el registro de la nueva vista, quizá se deba a que el estudiante: '+estudiante.nombre+' ya visito este artículo'
+    });
+  }
+
 };
 
 module.exports = {

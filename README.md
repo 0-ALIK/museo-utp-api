@@ -25,7 +25,7 @@ Este proyecto está siendo desarrollado por el equipo de desarrollo del departam
 - Node.js
 - Express
 - Jest
-- Otros paquetes y librerías
+- Otros paquetes y librerías que pueden verse a detalle en `package.json`
 
 ## Documentación
 
@@ -35,6 +35,41 @@ Este proyecto está siendo desarrollado por el equipo de desarrollo del departam
 * [Visitas](#visitantes)
 * [Artículos](#articulos)
 
+Para empezar a utilizar el API, realizar la instalación de todas las dependencias del proyecto, ejecute el siguiente comando en la raíz del proyecto:
+
+```
+npm i
+```
+
+Crear un archivo llamado `.env` para colocar las variables de entorno
+
+Las variables que el proyecto esta utilizando son las siguientes: 
+
+```
+# Puerto del servidor
+PORT =
+
+# Credenciales para la base de datos principal (MySQL)
+DB_HOST =
+DB_PORT =
+DB_NAME =
+DB_USER =
+DB_PASS =
+
+# Json Web Token
+JWT_SECRET =
+
+# Credenciales para FireStorage uwu
+FIREBASE_API_KEY = 
+FIREBASE_AUTH_DOMAIN = 
+FIREBASE_PROJECT_ID = 
+FIREBASE_STORAGE_BUCKET = 
+FIREBASE_MESSAGING_SENDER_ID = 
+FIREBASE_APP_ID = 
+FIREBASE_MEASURAMENT_ID = 
+```
+
+Agregar esas variables al archivo `.env` usted debe encargarse de colocarle el valor a cada una
 
 ## LOGIN (Autenticación)
 ---
@@ -124,35 +159,24 @@ Obtener todas las facultades
 
 ### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/usuarios/all
 
-Obtener todos los usuarios de la base de datos
-  
-#### Query params
-
-| Param | Descripción |
-| ------------ | ------------ |
-| `limit` - *opcional* | Especifica el límite de resultados en la respuesta |
-| `page` - *opcional* | Para la paginación |
-| `query` - *opcional* | Hace que sólo hagan match los registros que conicidan con el query de búsqueda |
+Obtener todos los usuarios de tipo ESTUD de la base de datos
 
 #### Ejemplo de respuesta (application/json)
 
 Si todo sale bien, responde con un arreglo de usuarios de tipo ESTUD junto con un código de status **200**
 
 ```json
-{
-    "cantidad": "...",
-    "usuarios": [
-        {
-            "id": "...",
-            "usuario": "...",
-            "rol": "...",
-            "created_at": "...",
-            "updated_at": "...",
-            ...
-        },
+[
+    {
+        "id": "...",
+        "usuario": "...",
+        "rol": "...",
+        "created_at": "...",
+        "updated_at": "...",
         ...
-    ]
-}
+    },
+    ...
+]
 ```
 
 Si algo sale mal, responde con un código de status *400*
@@ -161,7 +185,7 @@ Si algo sale mal, responde con un código de status *400*
 
 ### <span style="background-color:#30DAA3; color: white; padding: 2px 5px;border-radius: 50px;">GET</span> /api/usuarios/**{usuario id}**
 
-Obtener un usuario en específico de la base de datos a través de su ID
+Obtener un usuario de tipo ESTUD en específico de la base de datos a través de su ID
 
 #### Params
 
@@ -194,7 +218,7 @@ Agrega un nuevo usuario en la base de datos, puede utilizarlo para realizar la p
 
 | Data |
 | ------------ |
-| `usuario` - *obligatorio* |
+| `nombre_usuario` - *obligatorio* |
 | `password` - *obligatorio* |
 | `nombre` - *obligatorio* |
 | `apellido` - *obligatorio* |
@@ -210,7 +234,7 @@ Los otros datos como el rol y las fechas son definidos de forma autamatica en el
 
 Si todo sale bien, responde enviando los datos del usuario creados con un código de status *201*
 
-**Importante**, el registro de usuario no genera un token de sesión, por lo tanto una vez el usuario se registra debe hacerle iniciar sesión con su cuenta
+**Importante**, el registro de usuario no genera un token de sesión, por lo tanto, una vez el usuario se registra debe hacerle iniciar sesión con su cuenta
 
 ```json
 {
@@ -227,7 +251,7 @@ Si algo sale mal, responde con un código de status *400*
 
 ---
 
-### <span style="background-color:#DAA330; color: white; padding: 2px 5px; border-radius: 50px;">PUT</span> /api/usuarios `AUTH`
+### <span style="background-color:#DAA330; color: white; padding: 2px 5px; border-radius: 50px;">PUT</span> /api/usuarios `AUTH ESTUD`
 
 Actualiza los datos de un usuario, se hace en base a su token de sesión
 
@@ -235,13 +259,13 @@ Actualiza los datos de un usuario, se hace en base a su token de sesión
 
 | Header | Descripción |
 | ------------ | ------------ |
-| `x-token` - *obligatorio* | Es el token de sesión de usuario, se requiere para poder tener acceso a ciertos recursos o realizar ciertas acciones |
+| `x-token` - *obligatorio* | Es el token de sesión de usuario, se requiere para realizar el UPDATE de los datos de este |
 
 #### Body data (application/json)
 
 | Data |
 | ------------ |
-| `usuario` - *opcional* |
+| `nombre_usuario` - *opcional* |
 | `nombre` - *opcional* |
 | `apellido` - *opcional* |
 | `cedula` - *opcional* |
@@ -277,13 +301,13 @@ Elimina un usuario en base a su id, **sólo lo puede realizar un administrador**
 
 | Header | Descripción |
 | ------------ | ------------ |
-| `x-token` - *obligatorio* | Es el token de sesión de usuario, se requiere para poder tener acceso a ciertos recursos o realizar ciertas acciones |
+| `x-token` - *obligatorio* | Es el token de sesión de usuario admin, sólo los admin podran eliminar cuentas |
 
 #### Params
 
 | Param | Descripción |
 | ------------ | ------------ |
-| `usuario id` - *obligatorio* | Es el id del usuario a buscar |
+| `usuario id` - *obligatorio* | Es el id del usuario a eliminar |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -342,8 +366,6 @@ Si desean saber el número de visitas como un valor entero, háganlo desde el Fr
         "nivel": "...",
         "facultad": "...",
         "carrera": "...",
-        "created_at": "...",
-        "updated_at": "...",
         ...
     },
     ...
@@ -378,12 +400,10 @@ Si desean saber el número de visitas como un valor entero, háganlo desde el Fr
 
 ```json
 {
-    "id": "...",
-    "usuario": "...",
-    "rol": "...",
-    "created_at": "...",
-    "updated_at": "...",
-    ...
+    "id_visitante": "...",
+    "id_estudiante": "...",
+    "articulo_id": "...",
+    "fecha": "...",
 }   
 ```
 
@@ -507,14 +527,14 @@ Si todo sale bien, responde enviando el nuevo artículo creado junto con un cód
     "created_at": "...",
     "updated_at": "...",
     "fotos": [
-        "x.jpg",
-        "y.jpg"
+        { "id": "...", "url": "x.jpg" },
+        { "id": "...", "url": "y.jpg" }
     ],
     "videos": [
-        "x.mp4"
+        { "id": "...", "url": "x.mp4" }
     ],
     "audios": [
-        "x.mp3"
+        { "id": "...", "url": "x.mp3" }
     ]
 }
 ```
@@ -555,14 +575,14 @@ Si todo sale bien, responde enviando el artículo ya con sus datos actualizados 
     "created_at": "...",
     "updated_at": "...",
     "fotos": [
-        "x.jpg",
-        "y.jpg"
+        { "id": "...", "url": "x.jpg" },
+        { "id": "...", "url": "y.jpg" }
     ],
     "videos": [
-        "x.mp4"
+        { "id": "...", "url": "x.mp4" }
     ],
     "audios": [
-        "x.mp3"
+        { "id": "...", "url": "x.mp3" }
     ]
 }
 ```
@@ -600,14 +620,14 @@ Si todo sale bien, responde enviando el artículo eliminado junto con un código
     "created_at": "...",
     "updated_at": "...",
     "fotos": [
-        "x.jpg",
-        "y.jpg"
+        { "id": "...", "url": "x.jpg" },
+        { "id": "...", "url": "y.jpg" }
     ],
     "videos": [
-        "x.mp4"
+        { "id": "...", "url": "x.mp4" }
     ],
     "audios": [
-        "x.mp3"
+        { "id": "...", "url": "x.mp3" }
     ]
 }
 ```

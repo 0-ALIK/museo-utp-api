@@ -10,18 +10,33 @@ const { validationResult } = require('express-validator');
 const validarJWTMiddleware = async ( req, res, next ) => {
     const token = req.header('x-token');
 
-    if(!token) 
+    if(!token)
         res.send(401).json({msg: 'no se ha enviado el token'});
 
-    const { usuario, msg } = await validarJWT( token );
+    const { usuario, msg } = await validar
 
     if(!usuario) 
-        return generarError(401, msg, res);
+        res.status(401).json({ msg });
 
     req.usuarioAuth = usuario;
-        
+
     next();
 };
+
+const validarRol = (rol) => {
+
+    return (req, res, next) => {
+        const usuario = req.usuarioAuth;
+
+        if(usuario.rol !== rol) {
+            res.status(401).json({
+                msg: 'los usuarios con rol de tipo '+usuario.rol+' no pueden realizar esta acción'
+            });
+        }
+
+        next();
+    }
+}
 
 /**
  * Por defecto los errores que detectan los middlewares de express-validator no se muestran
@@ -46,5 +61,6 @@ const mostrarErrores = ( req, res, next ) => {
 
 module.exports = {
     validarJWTMiddleware,
-    mostrarErrores
+    mostrarErrores,
+    validarRol
 }

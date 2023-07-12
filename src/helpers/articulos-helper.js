@@ -78,7 +78,7 @@ const insertArticuloAndGetIt = async (nombre, descripcion, categoria_id) => {
   ]);
   return result2;
 } catch (error) {
-    throw new Error(error);
+  throw new Error(error);
 }
 };
 

@@ -2,57 +2,74 @@
 const {response, request} = require('express');
 const connection = require('../config/connection');
 const consultas = require('../helpers/consultas-helper');
-const {validarJWT} = require('../helpers/jwt-helpers');
 const bcrypt = require('bcrypt');
+const { agregarDatosEstudiante, crearConsultaUpdate } = require('../helpers/database-helpers');
 
 //Mostrar todos los usuario
-const getAll = async (req = request, res = response) =>{
+const getAll = async (req = request, res = response) => {
     
-    //consulta de todos los estudiantes
-    const [result] = await connection.query(consultas.usuarioByAnyWhere);
-    res.status(200).json(result);
+    try {
+        //consulta de todos los estudiantes
+        const [result] = await connection.query(consultas.estudianteAndUserByAnyWhere);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({
+            msg: 'error al obtener los estudiantes',
+            error
+        });
+    }
 }
 
 //Mostrar un usuario en base a su ID
-const getById = async (req = request, res = response) =>{
+const getById = async (req = request, res = response) => {
     const id = req.params.id;
 
-    //consulta de un usuario segun ID
-    const [result] = await connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', [id]);
-    res.status(200).json(result);
+    try {
+        //consulta de un usuario segun ID
+        const [result] = await connection.query(consultas.estudianteAndUserByAnyWhere + 'WHERE id_usuario = ?', [id]);
+        res.status(200).json(result[0]);
+
+    } catch (error) {
+        res.status(500).json({
+            msg: 'error al obtener el usuario por el id: '+id,
+            error
+        });
+    }
 }
 
 //postear un usuario
 const postUsuario = async (req = request, res = response) => {
+    
+    const { nombre_usuario, password, nombre, apellido, cedula, nivel, id_facultad, id_carrera } = req.body;
 
-    const {nombre_usuario, password, nombre, apellido, nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto} = req.body;
-
-    //Hasheo de contrasena que sera almacenada en la base de datos
-    const salt = bcrypt.genSaltSync()
-    const hashPassword = bcrypt.hashSync(password, salt);
-
-    //Query para postear los datos de un usuario
-    await connection.query(consultas.postUsuario, [nombre_usuario, hashPassword])
-
-    //Query para consultar los datos de un usuario
-    const [result] = connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = LAST_INSERT_ID()');
-    const usuario = result[0];
-
-    //Query para postear los datos de un estudiante
-    await connection.query(consultas.postEstudiante,[nombre, apellido, cedula, nivel, id_facultad, id_carrera, foto]);
-
-    //Query para consultar los datos de un estudiante
-    const [result2] = connection.query(consultas.estudianteByAnyWhere + 'WHERE id_usuario = LAST_INSERT_ID()');
-
-    usuario.nombre = result2[0].nombre;
-    usuario.apellido = result2[0].apellido;
-    usuario.cedula = result2[0].cedula;
-    usuario.nivel = result2[0].nivel;
-    usuario.facultad = result2[0].facultad;
-    usuario.carrera = result2[0].carrera;
-    usuario.foto = result2[0].foto;
-
-     res.status(201).json(usuario)
+    try {
+        //Hasheo de contrasena que sera almacenada en la base de datos
+        const salt = bcrypt.genSaltSync()
+        const hashPassword = bcrypt.hashSync(password, salt);
+    
+        //Query para postear los datos de un usuario
+        await connection.query(consultas.postUsuario, [nombre_usuario, hashPassword])
+    
+        //Query para consultar los datos de un usuario
+        const [resultUsuario] = await connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = LAST_INSERT_ID()');
+        const usuario = resultUsuario[0];
+    
+        //Query para postear los datos de un estudiante
+        await connection.query(consultas.postEstudiante,[nombre, apellido, cedula, nivel, id_facultad, id_carrera, usuario.id]);
+    
+        //Query para consultar los datos de un estudiante
+        const [resultEstud] = await connection.query(consultas.estudianteByAnyWhere + 'WHERE id_usuario = LAST_INSERT_ID()');
+    
+        agregarDatosEstudiante(usuario, resultEstud);
+    
+        res.status(201).json(usuario)
+    } catch (error) {
+        res.status(500).json({
+            msg: 'error al hacer el registro',
+            body: req.body,
+            error
+        });
+    }
 }
 
 //Modificar datos de un usuario
@@ -62,44 +79,51 @@ const putUsuario = async (req = request, res = response) =>{
     const usuario = req.usuarioAuth;
 
     // datos extraidos por el req.body
-    const {usuarioNombre, nombre, apellido,  cedula, nivel, id_facultad, id_carrera, foto} = req.body; 
+    const body = req.body;
 
-    //Verificar que el usuario no este vacio
-    if(!usuario){
-        return res.status(404).json({
-            mensaje: 'Error: No se encontro el usuario'
-        })
+    const [consulta, datos] = crearConsultaUpdate('estudiante', body, 'id_estudiante', usuario.id);
+
+    try {
+        
+        // Aqui se realiza el update
+        await connection.query(consulta, datos);
+    
+        const [result] = await connection.query(consultas.estudianteAndUserByAnyWhere + 'WHERE es.id_estudiante = ?', [usuario.id]);
+    
+        res.status(202).json(result[0]);
+        
+    } catch (error) {
+        res.status(500).json({
+            msg: 'error al hacer el update',
+            datos,
+            consulta,
+            error
+        });
     }
-
-    //Query para postear un usuario
-    await connection.query(consultas.putUsuario + 'WHERE id_usuario = ?',[usuarioNombre, usuario.id])
-    const [result] = connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', [usuario.id]);
-
-    res.status(202).json({
-        mensaje: 'Usuario Actualizado'
-    });
 }
 
 //Eliminar un usuario
-const deleteUsuario = async (req = request, res = response) =>{
-    const usuario = req.usuarioAuth;
+const deleteUsuario = async (req = request, res = response) => {
+    const id = req.params.id;
 
-    //Verificar que el usuario no este vacio
-    if(!usuario){
-        return res.status(404).json({
-            mensaje: 'Error: No se encontro el usuario'
-        })
+    try {
+        //Query para consultar los datos de un usuario
+        const [ result ] = await connection.query(consultas.estudianteByAnyWhere + 'WHERE es.id_estudiante = ?', [id]);
+        const usuario = result[0];
+
+        if(!usuario) 
+            res.status(400).json({msg: 'no existe estudiante con id: '+id});
+    
+        //Query para eliminar un usuario
+        await connection.query(consultas.deleteUsuario + 'WHERE id_usuario = ?', [usuario.usuario_id]);
+    
+        res.status(202).json(result[0]);
+    } catch (error) {
+        res.status(500).json({
+            msg: 'error al hacer el DELETE al estudiante con id: '+id,
+            error
+        });
     }
-
-    //Query para consultar los datos de un usuario
-    const [result] = connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?',[usuario.id]);
-
-    //Query para eliminar un usuario
-    await connection.query(consultas.deleteUsuario + 'WHERE id_usuario = ?', [usuario.id]);
-
-    res.status(202).json({
-        mensaje: 'Usuario Eliminado',result
-    })
 
 }
 

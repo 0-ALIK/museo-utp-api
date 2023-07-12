@@ -12,6 +12,7 @@ const consultas = {
     estudianteByAnyWhere: `
     SELECT
         es.id_estudiante as id,
+        es.usuario_id,
         es.nombre,
         es.apellido,
         es.cedula,
@@ -24,6 +25,26 @@ const consultas = {
     ON fa.id_facultad = es.facultad_id
     JOIN carrera as ca
     ON ca.id_carrera = es.carrera_id `,
+
+    estudianteAndUserByAnyWhere: `
+    SELECT
+        es.id_estudiante as id,
+        us.nombre_usuario,
+        us.rol,
+        es.nombre,
+        es.apellido, 
+        es.cedula,
+        es.nivel,
+        es.foto,
+        fa.nombre as facultad,
+        ca.nombre as carrera
+    FROM estudiante as es
+    JOIN facultad as fa
+    ON fa.id_facultad = es.facultad_id
+    JOIN carrera as ca
+    ON ca.id_carrera = es.carrera_id 
+    JOIN usuario as us 
+    ON us.id_usuario = es.usuario_id `,
     
     visitanteById: `
     SELECT
@@ -65,18 +86,19 @@ const consultas = {
 
     postUsuario: `
         INSERT INTO usuario (nombre_usuario, contrasena)
-        VALUES (?, ?, ?)
+        VALUES (?, ?)
     `,
 
     postEstudiante:`
-        INSERT INTO estudiante (nombre, apellido, cedula, nivel, facultad_id, carrera_id, foto)
+        INSERT INTO estudiante (nombre, apellido, cedula, nivel, facultad_id, carrera_id, usuario_id)
         VALUES(?, ?, ?, ?, ? ,? ,?)
     `,
 
     putUsuario: `
         UPDATE usuario
         SET nombre_usuario = ?
-    `,
+    
+    `,  
 
     deleteUsuario:`
         DELETE FROM usuario

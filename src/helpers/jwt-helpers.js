@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const connection = require('../config/connection');
 const consultas = require('./consultas-helper');
+const { agregarDatosEstudiante } = require('./database-helpers');
 const { JWT_SECRET } = process.env;
 
 /**
@@ -35,9 +36,9 @@ const validarJWT = async (token = '') => {
     try {
         const { id } = jwt.verify( token, JWT_SECRET );
 
-        const [ result ] = connection.query( consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', [id] );
+        const [ resultUsuario ] = connection.query( consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', [id] );
 
-        const usuario = result[0]; 
+        const usuario = resultUsuario[0]; 
 
         if(!usuario) {
             return {msg: 'usuario no existe'}
@@ -45,17 +46,8 @@ const validarJWT = async (token = '') => {
 
         if(usuario.rol === 'ESTUD') {
         
-            const [ result2 ] = connection.query( consultas.estudianteById + 'WHERE es.usuario_id = ?', [usuario.id] );
-
-            usuario.id = result2[0].id;
-            usuario.nivel = result2[0].nivel;
-            usuario.carrera = result2[0].carrera;
-            usuario.facultad = result2[0].facultad;
-            usuario.facultad = result2[0].nombre;
-            usuario.facultad = result2[0].apellido;
-            usuario.facultad = result2[0].cedula;
-            usuario.facultad = result2[0].nivel;
-            usuario.facultad = result2[0].foto;
+            const [ resultEstud ] = connection.query( consultas.estudianteByAnyWhere + 'WHERE es.usuario_id = ?', [usuario.id] );
+            agregarDatosEstudiante(usuario, resultEstud);
         }
 
         return { usuario };

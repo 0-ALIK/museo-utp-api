@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { getVisitante, postVisitante } = require('../controllers/visitantes');
-const { mostrarErrores, validarJWTMiddleware } = require('../middlewares');
+const { mostrarErrores, validarJWTMiddleware, validarRol } = require('../middlewares');
+const { check } = require('express-validator/src');
 
 /**
  * Router para las operaciones relacionadas con los visitantes.
@@ -17,7 +18,10 @@ const router = Router();
  * @param {Function} getVisitante - Función de manejo que obtiene información del visitante.
  */
 router.get('/:id', [
-    mostrarErrores // Middleware para mostrar errores en caso de que ocurran
+    validarJWTMiddleware,
+    validarRol('ADMIN'),
+    check('id', 'el id debe ser un número').isNumeric(),
+    mostrarErrores 
 ], getVisitante);
 
 /**
@@ -29,8 +33,10 @@ router.get('/:id', [
  * @param {Function} postVisitante - Función de manejo que crea una nueva entrada de visitante.
  */
 router.post('/:id', [
-    mostrarErrores, // Middleware para mostrar errores en caso de que ocurran
-    validarJWTMiddleware // Middleware para validar el token JWT
+    validarJWTMiddleware,
+    validarRol('ESTUD'),
+    check('id', 'el id debe ser un número').isNumeric(),
+    mostrarErrores
 ], postVisitante);
 
 module.exports = router;
