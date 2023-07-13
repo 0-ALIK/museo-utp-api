@@ -1,4 +1,6 @@
 
+const nameRegExp = /^[a-zA-Z0-9_]+$/; 
+
 /**
  * Si un usuario tiene el rol 'ESTUD' es porque es estudiante,
  * por lo tanto, tiene datos en la tabla estudiante. 
@@ -33,14 +35,19 @@ const agregarDatosEstudiante = (usuario, result) => {
  */
 const crearConsultaUpdate = (tabla, data, campoid, id) => {
     const keys = Object.keys( data );
-    let consulta = 'UPTADE '+tabla+' ';
+    let consulta = 'UPDATE '+tabla+' SET ';
     let datos = [];
 
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
-        consulta += 'SET ' + key + ' = ? ';
-        datos.push( data[key] );
-    
+        consulta += key + ' = ? ';
+
+        if(!isNaN( data[key] )) {
+            datos.push( parseInt(data[key]) );    
+        } else {
+            datos.push( data[key] );
+        }
+
         if (i < keys.length - 1) {
             consulta += ', ';
         }
@@ -50,11 +57,10 @@ const crearConsultaUpdate = (tabla, data, campoid, id) => {
     datos.push( id );
 
     return [consulta, datos]; 
-}
-
-console.log(crearConsultaUpdate('pepe', {a: 'xd', pepe: 1}));
+};
 
 module.exports = {
     agregarDatosEstudiante,
-    crearConsultaUpdate
+    crearConsultaUpdate,
+    nameRegExp
 };

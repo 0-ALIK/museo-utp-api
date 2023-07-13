@@ -18,16 +18,18 @@ const login = async (req = request, res = response) => {
         const isPassCorrect = compareSync( password, usuario.password || '' );
 
         if(!usuario || !isPassCorrect) {
-            return res.status(400).json({msg: 'el correo / contraseña no son validos'});
+            return res.status(400).json({msg: 'el nombre_usuario / contraseña no son validos'});
         }
 
         const token = await generarJWT( usuario.id );
 
         if(usuario.rol === 'ESTUD') {
 
-            const [ resultEstud ] = connection.query( consultas.estudianteById + 'WHERE es.usuario_id = ?', [usuario.id] );
+            const [ resultEstud ] = await connection.query( consultas.estudianteByAnyWhere + 'WHERE es.usuario_id = ?', [usuario.id] );
             agregarDatosEstudiante( usuario, resultEstud );
         }
+
+        delete usuario.password;
 
         res.status(200).json({
             token,

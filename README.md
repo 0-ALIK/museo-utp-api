@@ -83,10 +83,10 @@ Será incluso más útil para los administradores ya que en la **web administrat
 
 #### Body data (application/json)
 
-| Data |
-| ------------ |
-| `nombre_usuario` - *obligatorio* |
-| `password` - *obligatorio* |
+| Data | Validaciones |
+| ------------ | ------------ |
+| `nombre_usuario` - *obligatorio* | Aqui no hay ninguna |
+| `password` - *obligatorio* | Aqui no hay ninguna |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -189,9 +189,9 @@ Obtener un usuario de tipo ESTUD en específico de la base de datos a través de
 
 #### Params
 
-| Param | Descripción |
-| ------------ | ------------ |
-| `usuario id` - *obligatorio* | Es el id del usuario a buscar |
+| Param | Descripción | Validaciones | 
+| ------------ | ------------ | ------------ |
+| `usuario id` - *obligatorio* | Es el id del usuario a buscar | numérico |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -216,17 +216,17 @@ Agrega un nuevo usuario en la base de datos, puede utilizarlo para realizar la p
 
 #### Body data (application/json)
 
-| Data |
-| ------------ |
-| `nombre_usuario` - *obligatorio* |
-| `password` - *obligatorio* |
-| `nombre` - *obligatorio* |
-| `apellido` - *obligatorio* |
-| `cedula` - *obligatorio* |
-| `nivel` - *obligatorio* |
-| `id_facultad` - *obligatorio* |
-| `id_carrera` - *obligatorio* |
-| `foto` - *opcional* |
+| Data | Validaciones |
+| ------------ | ------------ |
+| `nombre_usuario` - *obligatorio* | Formato de nombre de usuario (sin espacios y sin caracteres especiales), lenght(min: 2, max: 32) |
+| `password` - *obligatorio* | lenght(min: 8, max: 16) |
+| `nombre` - *obligatorio* | lenght(min: 2, max: 30) |
+| `apellido` - *obligatorio* | lenght(min: 2, max: 30) |
+| `cedula` - *obligatorio* | Formato de cédula |
+| `nivel` - *obligatorio* | numérico |
+| `id_facultad` - *obligatorio* | numérico |
+| `id_carrera` - *obligatorio* | numérico |
+| `foto` - *opcional* | File |
 
 Los otros datos como el rol y las fechas son definidos de forma autamatica en el backend
 
@@ -263,16 +263,16 @@ Actualiza los datos de un usuario, se hace en base a su token de sesión
 
 #### Body data (application/json)
 
-| Data |
-| ------------ |
-| `nombre_usuario` - *opcional* |
-| `nombre` - *opcional* |
-| `apellido` - *opcional* |
-| `cedula` - *opcional* |
-| `nivel` - *opcional* |
-| `id_facultad` - *opcional* |
-| `id_carrera` - *opcional* |
-| `foto` - *opcional* |
+| Data | Validaciones |
+| ------------ | ------------ |
+| `nombre_usuario` - *opcional* | Las mismas que en el post |
+| `nombre` - *opcional* | Las mismas que en el post |
+| `apellido` - *opcional* | Las mismas que en el post |
+| `cedula` - *opcional* | Las mismas que en el post |
+| `nivel` - *opcional* | Las mismas que en el post |
+| `id_facultad` - *opcional* | Las mismas que en el post |
+| `id_carrera` - *opcional* | Las mismas que en el post |
+| `foto` - *opcional* | Las mismas que en el post |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -305,9 +305,9 @@ Elimina un usuario en base a su id, **sólo lo puede realizar un administrador**
 
 #### Params
 
-| Param | Descripción |
-| ------------ | ------------ |
-| `usuario id` - *obligatorio* | Es el id del usuario a eliminar |
+| Param | Descripción | Validaciones |
+| ------------ | ------------ | ------------ |
+| `usuario id` - *obligatorio* | Es el id del usuario a eliminar | numérico |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -344,9 +344,9 @@ Retorna los usuarios que han visitado un artículo en específico, esto sólo lo
 
 #### Params
 
-| Param | Descripción |
-| ------------ | ------------ |
-| `artículo id` - *obligatorio* | Es el id del artículo a listar sus visitantes |
+| Param | Descripción | Validaciones |
+| ------------ | ------------ | ------------ |
+| `artículo id` - *obligatorio* | Es el id del artículo a listar sus visitantes | numérico |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -388,9 +388,9 @@ Registra en la base de datos, la visita de un usuario a un artículo del museo, 
 
 #### Params
 
-| Param | Descripción |
-| ------------ | ------------ |
-| `artículo id` - *obligatorio* | Es el id del artículo a realizarle una visita |
+| Param | Descripción | Validaciones |
+| ------------ | ------------ | ------------ |
+| `artículo id` - *obligatorio* | Es el id del artículo a realizarle una visita | numérico |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -421,11 +421,11 @@ Retorna todos los artículos de la base de datos
 
 #### Query params
 
-| Param | Descripción |
-| ------------ | ------------ |
-| `limit` - *opcional* | Especifica el límite de resultados en la respuesta |
-| `page` - *opcional* | Para la paginación |
-| `query` - *opcional* | Hace que sólo hagan match los registros que conicidan con el query de búsqueda |
+| Param | Descripción | Validaciones |
+| ------------ | ------------ | ------------ |
+| `limit` - *opcional* | Especifica el límite de resultados en la respuesta | numérico |
+| `page` - *opcional* | Para la paginación | numérico |
+| `query` - *opcional* | Hace que sólo hagan match los registros que conicidan con el query de búsqueda | numérico |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -460,9 +460,9 @@ Obtener un articulo en específico de la base de datos, a través de su ID
 
 #### Params
 
-| Param | Descripción |
-| ------------ | ------------ |
-| `artículo id` - *obligatorio* | Es el id del artículo a buscar |
+| Param | Descripción | Validaciones |
+| ------------ | ------------ | ------------ |
+| `artículo id` - *obligatorio* | Es el id del artículo a buscar | numérico |
 
 #### Ejemplo de respuesta (application/json)
 

@@ -1,4 +1,5 @@
 const { validationResult } = require('express-validator');
+const { validarJWT } = require('../helpers/jwt-helpers')
 
 /**
  * Este middleware se 
@@ -10,13 +11,15 @@ const { validationResult } = require('express-validator');
 const validarJWTMiddleware = async ( req, res, next ) => {
     const token = req.header('x-token');
 
-    if(!token)
-        res.send(401).json({msg: 'no se ha enviado el token'});
+    if(!token) {
+        return res.send(401).json({msg: 'no se ha enviado el token'});
+    }
 
-    const { usuario, msg } = await validar
+    const { usuario, msg } = await validarJWT( token );
 
-    if(!usuario) 
-        res.status(401).json({ msg });
+    if(!usuario) {
+        return res.status(401).json({ msg });
+    }
 
     req.usuarioAuth = usuario;
 
@@ -29,7 +32,7 @@ const validarRol = (rol) => {
         const usuario = req.usuarioAuth;
 
         if(usuario.rol !== rol) {
-            res.status(401).json({
+            return res.status(401).json({
                 msg: 'los usuarios con rol de tipo '+usuario.rol+' no pueden realizar esta acción'
             });
         }

@@ -58,9 +58,11 @@ const postUsuario = async (req = request, res = response) => {
         await connection.query(consultas.postEstudiante,[nombre, apellido, cedula, nivel, id_facultad, id_carrera, usuario.id]);
     
         //Query para consultar los datos de un estudiante
-        const [resultEstud] = await connection.query(consultas.estudianteByAnyWhere + 'WHERE id_usuario = LAST_INSERT_ID()');
+        const [resultEstud] = await connection.query(consultas.estudianteByAnyWhere + 'WHERE es.id_estudiante = LAST_INSERT_ID()');
     
         agregarDatosEstudiante(usuario, resultEstud);
+
+        delete usuario.password;
     
         res.status(201).json(usuario)
     } catch (error) {
@@ -111,13 +113,14 @@ const deleteUsuario = async (req = request, res = response) => {
         const [ result ] = await connection.query(consultas.estudianteByAnyWhere + 'WHERE es.id_estudiante = ?', [id]);
         const usuario = result[0];
 
-        if(!usuario) 
-            res.status(400).json({msg: 'no existe estudiante con id: '+id});
+        if(!usuario) {
+            return res.status(400).json({msg: 'no existe estudiante con id: '+id});
+        }
     
         //Query para eliminar un usuario
         await connection.query(consultas.deleteUsuario + 'WHERE id_usuario = ?', [usuario.usuario_id]);
     
-        res.status(202).json(result[0]);
+        res.status(202).json(usuario);
     } catch (error) {
         res.status(500).json({
             msg: 'error al hacer el DELETE al estudiante con id: '+id,

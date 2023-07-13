@@ -21,10 +21,9 @@ class Server {
         this.paths = {
             facultades: "/api/facultades",
             carreras: "/api/carreras",
-            auth: "/api/auth/login",
             visitantes: "/api/visitantes",
             usuarios: "/api/usuarios",
-            auth: "/api/auth/login",
+            auth: "/api/auth",
             articulos: "/api/articulos"
         };
 

@@ -36,7 +36,7 @@ const validarJWT = async (token = '') => {
     try {
         const { id } = jwt.verify( token, JWT_SECRET );
 
-        const [ resultUsuario ] = connection.query( consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', [id] );
+        const [ resultUsuario ] = await connection.query( consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', [id] );
 
         const usuario = resultUsuario[0]; 
 
@@ -46,7 +46,7 @@ const validarJWT = async (token = '') => {
 
         if(usuario.rol === 'ESTUD') {
         
-            const [ resultEstud ] = connection.query( consultas.estudianteByAnyWhere + 'WHERE es.usuario_id = ?', [usuario.id] );
+            const [ resultEstud ] = await connection.query( consultas.estudianteByAnyWhere + 'WHERE es.usuario_id = ?', [usuario.id] );
             agregarDatosEstudiante(usuario, resultEstud);
         }
 
