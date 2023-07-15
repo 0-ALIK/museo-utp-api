@@ -507,12 +507,14 @@ Registrar un nuevo artículo en la base de datos, esta acción sólo la puede re
 
 #### Body data (application/json)
 
-| Data |
-| ------------ |
-| `nombre` - *obligatorio* |
-| `descripcion` - *obligatorio* |
-| `categoria_id` - *obligatorio* |
-| Ademas de todos los archivos multimedios que tendrá este nuevo articulo (imagenes, videos y audios) |
+| Data | Validaciones |
+| ------------ | ------------ |
+| `nombre` - *obligatorio* | lenght(min: 2, max: 120) |
+| `descripcion` - *obligatorio* | lenght(min: 2, max: 2048) |
+| `categoria_id` - *obligatorio* | numérico |
+| `ubicacion` - *obligatorio* | lenght(min: 2, max: 255) | 
+| `dueno` - *obligatorio* | lenght(min: 2, max: 120) |
+| `multimedios` - *opcional* | Es todo el conjunto de Files multimedios, utilizar **input multiple** |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -555,12 +557,15 @@ Actualizar un artículo ya existente en la base de datos, esta acción sólo la 
 
 #### Body data (application/json)
 
-| Data |
-| ------------ |
-| `nombre` - *opcional* |
-| `descripcion` - *opcional* |
-| `categoria_id` - *opcional* |
-| Ademas de todos los archivos multimedios que tendrá este nuevo articulo (imagenes, videos y audios) |
+| Data | Validaciones |
+| ------------ | ------------ |
+| `nombre` - *opcional* | lenght(min: 2, max: 120) |
+| `descripcion` - *opcional* | lenght(min: 2, max: 2048) |
+| `categoria_id` - *opcional* | numérico |
+| `ubicacion` - *opcional* | lenght(min: 2, max: 255) | 
+| `dueno` - *opcional* | lenght(min: 2, max: 120) |
+| `articulosBorrarId` - *opcional* | Array numérico, es un arreglo con los ids de los elementos multimedios del artículo |
+| `multimedios` - *opcional* | Es todo el conjunto de Files multimedios, utilizar **input multiple** |
 
 #### Ejemplo de respuesta (application/json)
 

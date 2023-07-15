@@ -1,3 +1,4 @@
+const connection = require("../config/connection");
 
 const nameRegExp = /^[a-zA-Z0-9_]+$/; 
 
@@ -33,10 +34,15 @@ const agregarDatosEstudiante = (usuario, result) => {
  * @param {*} id es el id xd
  * @returns un arreglo con la consulta y los datos para el query
  */
-const crearConsultaUpdate = (tabla, data, campoid, id) => {
+const crearConsultaUpdate = async (tabla, data, campoid, id) => {
     const keys = Object.keys( data );
     let consulta = 'UPDATE '+tabla+' SET ';
     let datos = [];
+
+    if(keys.length === 0) {
+        console.log('No hay datos para actualizar, no se realiza el update en: '+tabla);
+        return;
+    }
 
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
@@ -56,7 +62,7 @@ const crearConsultaUpdate = (tabla, data, campoid, id) => {
     consulta += 'WHERE '+campoid+' = ?';
     datos.push( id );
 
-    return [consulta, datos]; 
+    await connection.query( consulta, datos ); 
 };
 
 module.exports = {

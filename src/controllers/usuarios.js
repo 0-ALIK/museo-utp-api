@@ -83,12 +83,12 @@ const putUsuario = async (req = request, res = response) =>{
     // datos extraidos por el req.body
     const body = req.body;
 
-    const [consulta, datos] = crearConsultaUpdate('estudiante', body, 'id_estudiante', usuario.id);
-
+    
     try {
         
         // Aqui se realiza el update
-        await connection.query(consulta, datos);
+        /* const [consulta, datos] =  */await crearConsultaUpdate('estudiante', body, 'id_estudiante', usuario.id);
+        //await connection.query(consulta, datos);
     
         const [result] = await connection.query(consultas.estudianteAndUserByAnyWhere + 'WHERE es.id_estudiante = ?', [usuario.id]);
     

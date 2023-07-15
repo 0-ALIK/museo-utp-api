@@ -12,7 +12,8 @@ router.get('/all', getAll);
 
 //Ruta para devolver un usuarios
 router.get('/:id', [
-    check('id', 'el id debe ser un número').isNumeric()
+    check('id', 'el id debe ser un número').isNumeric(),
+    mostrarErrores
 ], getById);
 
 //Ruta para postear un usuario

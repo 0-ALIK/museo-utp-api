@@ -63,9 +63,9 @@ const populateArticuloMultimedios = async (result) => {
 };
 
 //recibe los campos de un articulo y lo inserta en la base de datos y retorna el articulo insertado
-const insertArticuloAndGetIt = async (nombre, descripcion, categoria_id) => {
+const insertArticuloAndGetIt = async (nombre, descripcion, categoria_id, ubicacion, dueno) => {
 	try{
-		await conecction.query(querys.insertArticulo, [ nombre, descripcion, categoria_id]);
+		await conecction.query(querys.insertArticulo, [ nombre, descripcion, categoria_id, ubicacion, dueno]);
 
 		const [ id ] = await conecction.query(querys.getInsertedId);
 
@@ -82,33 +82,33 @@ const uploadMultimedios = async (multimedios, articulo_id) => {
     try{
 		return Promise.all(
 			multimedios.map(async (multimedio) => {
-			let storageRef;
-			let tipo;
+				let storageRef;
+				let tipo;
 
-			// se verifica el tipo de archivo y se asigna el path y su formato correspondiente
-			if (multimedio.mimetype === "image/jpeg" || multimedio.mimetype === "image/png" || multimedio.mimetype === "image/jpg") {
-				storageRef = ref(storage, `imagenes/${multimedio.name}`);
-				tipo = "imagen";
-			}
-			if (multimedio.mimetype === "video/mp4") {
-				storageRef = ref(storage, `videos/${multimedio.name}`);
-				tipo = "video";
-			}
-			if (multimedio.mimetype === "audio/mpeg") {
-				storageRef = ref(storage, `audios/${multimedio.name}`);
-				tipo = "audio";
-			}
+				// se verifica el tipo de archivo y se asigna el path y su formato correspondiente
+				if (multimedio.mimetype === "image/jpeg" || multimedio.mimetype === "image/png" || multimedio.mimetype === "image/jpg") {
+					storageRef = ref(storage, `imagenes/${multimedio.name}`);
+					tipo = "imagen";
+				}
+				if (multimedio.mimetype === "video/mp4") {
+					storageRef = ref(storage, `videos/${multimedio.name}`);
+					tipo = "video";
+				}
+				if (multimedio.mimetype === "audio/mpeg") {
+					storageRef = ref(storage, `audios/${multimedio.name}`);
+					tipo = "audio";
+				}
 
-			//se sube el archivo al storage en la nube
-			const res = await uploadBytes(storageRef, multimedio.data, {
-				contentType: multimedio.mimetype,
-			});
+				//se sube el archivo al storage en la nube
+				const res = await uploadBytes(storageRef, multimedio.data, {
+					contentType: multimedio.mimetype,
+				});
 
-			//se obtiene la url del archivo subido
-			const url = await getDownloadURL(storageRef);
-			
-			//se inserta el URL en la base de datos
-			const [result, metadata] = await conecction.query( querys.insertMultimedio, [url, tipo, articulo_id] );
+				//se obtiene la url del archivo subido
+				const url = await getDownloadURL(storageRef);
+				
+				//se inserta el URL en la base de datos
+				const [ result, metadata ] = await conecction.query( querys.insertMultimedio, [url, tipo, articulo_id] );
 			})
 		);
 	} catch (error) {
@@ -129,16 +129,18 @@ const updateArticuloById = async (nombre, descripcion, categoria_id, id) => {
 
 
 //recibe el id de un articulo y borra todos sus multimedios
-const borrarMultimedios = async (id) => {
+const borrarMultimedios = async (id_multimedio, id_articulo) => {
     try{
-		const [ urls ] = await conecction.query(querys.getMultimediosUrl, [ id ]);
+		const [ multimedios ] = await conecction.query(querys.getMultimediosUrl, [ id_multimedio, id_articulo ]);
 
-		urls.map(async (url) => {
-			const urlRef = ref(storage, url.url);
+		const multimedio = multimedios[0];
+
+		if(multimedio) {
+			const urlRef = ref(storage, multimedio.url);
 			await deleteObject(urlRef);
-		});
 
-  		await conecction.query(querys.deleteMultimedio, [id]);
+			await conecction.query(querys.deleteMultimedio, [id_multimedio, id_articulo]);
+		}
 	} catch (error) {
 	    throw new Error(error);
 	}

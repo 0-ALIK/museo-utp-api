@@ -109,6 +109,8 @@ const consultas = {
     nombre, 
     categoria_id,
     descripcion, 
+    ubicacion,
+    dueno,
     created_at, 
     updated_at 
     FROM articulo
@@ -129,9 +131,11 @@ const consultas = {
     getArticuloById: `
     SELECT
     id_articulo as id, 
-    nombre, 
+    nombre,
     categoria_id,
     descripcion, 
+    ubicacion,
+    dueno,
     created_at, 
     updated_at  
     FROM articulo 
@@ -145,8 +149,8 @@ const consultas = {
     WHERE articulo_id = ?`,
 
     insertArticulo:`
-    INSERT INTO articulo(nombre, descripcion, categoria_id)
-    VALUES(?, ?, ?)`,   
+    INSERT INTO articulo(nombre, descripcion, categoria_id, ubicacion, dueno)
+    VALUES(?, ?, ?, ?, ?)`,   
 
     getInsertedId:`select max(id_articulo) as id 
     from articulo`,
@@ -157,10 +161,10 @@ const consultas = {
     
     getMultimediosUrl:`SELECT url 
     FROM multimedio 
-    where id_multimedio = ?`,
+    where id_multimedio = ? AND articulo_id = ?`,
 
     deleteMultimedio:`
-    delete from multimedio where id_multimedio = ?
+    delete from multimedio where id_multimedio = ? AND articulo_id = ?
     `,
 
     deleteArticulo:`
