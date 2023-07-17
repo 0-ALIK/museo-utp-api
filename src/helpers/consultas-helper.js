@@ -90,8 +90,8 @@ const consultas = {
     `,
 
     postEstudiante:`
-        INSERT INTO estudiante (nombre, apellido, cedula, nivel, facultad_id, carrera_id, usuario_id)
-        VALUES(?, ?, ?, ?, ? ,? ,?)
+        INSERT INTO estudiante (nombre, apellido, cedula, nivel, facultad_id, carrera_id, foto, usuario_id)
+        VALUES(?, ?, ?, ?, ? ,? ,?, ?)
     `,
 
     putUsuario: `
@@ -178,6 +178,28 @@ const consultas = {
     getAllMultimediosId: `select id_multimedio as id
      from multimedio 
      where articulo_id = ?`,
+
+    getComentariosByAnyWhere: `
+    SELECT 
+        co.id_comentario as id,
+        es.id_estudiante,
+        es.nombre,
+        es.apellido,
+        es.foto,
+        co.comentario,
+        co.articulo_id
+    FROM comentario as co 
+    JOIN estudiante as es
+    ON es.id_estudiante = co.estudiante_id `,
+
+    dejarComentarioEnArticulo: `
+    INSERT INTO comentario (estudiante_id, comentario, articulo_id) 
+    VALUES (?, ?, ?);
+    `,
+
+    borrarComentarioById: `
+    DELETE FROM comentario WHERE estudiante_id = ? AND id_comentario = ?
+    `
 };
 
 module.exports = consultas;

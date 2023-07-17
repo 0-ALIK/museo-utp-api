@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const { facultades, carreras, auth, visitantes, usuarios, articulos } = require('../routes');
+const { facultades, carreras, auth, visitantes, usuarios, articulos, comentarios } = require('../routes');
 
 /**
  * Esta clase engloba toda la lógica y configuración del servidor
@@ -24,7 +24,8 @@ class Server {
             visitantes: "/api/visitantes",
             usuarios: "/api/usuarios",
             auth: "/api/auth",
-            articulos: "/api/articulos"
+            articulos: "/api/articulos",
+            comentarios: "/api/comentarios"
         };
 
         this.middlewares();
@@ -47,12 +48,13 @@ class Server {
         this.app.get('/', (req, res) => {
             res.send('Museo UTP - API');
         });
-        this.app.use(this.paths.facultades, facultades);
-        this.app.use(this.paths.carreras, carreras);
-        this.app.use(this.paths.usuarios, usuarios);
-        this.app.use(this.paths.auth, auth);
-        this.app.use(this.paths.visitantes, visitantes);
-        this.app.use(this.paths.articulos, articulos);
+        this.app.use( this.paths.facultades, facultades );
+        this.app.use( this.paths.carreras, carreras );
+        this.app.use( this.paths.usuarios, usuarios );
+        this.app.use( this.paths.auth, auth );
+        this.app.use( this.paths.visitantes, visitantes );
+        this.app.use( this.paths.articulos, articulos );
+        this.app.use( this.paths.comentarios, comentarios );
     }
 
     /**

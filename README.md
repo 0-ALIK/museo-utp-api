@@ -34,6 +34,7 @@ Este proyecto está siendo desarrollado por el equipo de desarrollo del departam
 * [Carreras y facultades](#facultades-y-carreras)
 * [Visitas](#visitantes)
 * [Artículos](#articulos)
+* [Comentarios](#comentarios)
 
 Para empezar a utilizar el API, realizar la instalación de todas las dependencias del proyecto, ejecute el siguiente comando en la raíz del proyecto:
 
@@ -137,6 +138,31 @@ Obtener todas las facultades
 ### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/carreras/all
 
 Obtener todas las facultades
+
+#### Ejemplo de respuesta (application/json)
+
+```json
+[
+    {
+        "id": "...",
+        "nombre": "...",
+        "facultad_id": "..."
+    },
+    ...
+]
+```
+
+---
+
+### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/carreras/allbyfac/{facultad id}
+
+Obtener todas las facultades
+
+#### Params
+
+| Param | Descripción | Validaciones | 
+| ------------ | ------------ | ------------ |
+| `facultad id` - *obligatorio* | Es el id de la facultad de las carreras | numérico |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -634,6 +660,121 @@ Si todo sale bien, responde enviando el artículo eliminado junto con un código
     "audios": [
         { "id": "...", "url": "x.mp3" }
     ]
+}
+```
+
+Si algo sale mal, responde con un código de status *400*
+
+---
+---
+## COMENTARIOS
+---
+---
+
+### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/comentarios/**{artículo id}**
+
+Obtener todos los comentarios de un artículo en base al id del artículo
+
+#### Params
+
+| Param | Descripción |
+| ------------ | ------------ |
+| `artículo id` - *obligatorio* | Es el id del artículo para obtener sus comentarios |
+
+#### Ejemplo de respuesta (application/json)
+
+Si todo sale bien, responde enviando un arreglo con los comentarios del artículo *200*
+
+```json
+[
+    {
+        "id": "...",
+        "id_estudiante": "...",
+        "nombre": "...",
+        "apellido": "...",
+        "foto": "...",
+        "comentario": "...",
+        "articulo_id": "..."
+    },
+    ...
+]
+```
+
+Si algo sale mal, responde con un código de status *400*
+
+---
+
+### <span style="background-color:#67DA30; color: white; padding: 2px 5px; border-radius: 50px;">POST</span> /api/comentarios/**{artículo id}** `AUTH ESTUD`
+
+Agregar un comentario a un artículo en base a su id
+
+#### Headers
+
+| Header | Descripción |
+| ------------ | ------------ |
+| `x-token` - *obligatorio* | Es el token de sesión de usuario, se requiere para poder tener acceso a ciertos recursos o realizar ciertas acciones |
+
+#### Params
+
+| Param | Descripción |
+| ------------ | ------------ |
+| `artículo id` - *obligatorio* | Es el id del artículo para agregarle un nuevo comentario |
+
+#### Body data (application/json)
+
+| Data | Validaciones |
+| ------------ | ------------ |
+| `comentario` - *opcional* | lenght(min: 2, max: 150) |
+
+#### Ejemplo de respuesta (application/json)
+
+Si todo sale bien, responde enviando el nuevo comentario del artículo *200*
+
+```json
+{
+    "id": "...",
+    "id_estudiante": "...",
+    "nombre": "...",
+    "apellido": "...",
+    "foto": "...",
+    "comentario": "...",
+    "articulo_id": "..."
+}
+```
+
+Si algo sale mal, responde con un código de status *400*
+
+---
+
+### <span style="background-color:#DA4E30; color: white; padding: 2px 5px; border-radius: 50px;">DELETE</span> /api/comentarios/**{comentario id}** `AUTH ESTUD`
+
+Permite realizar la eliminación de un comentario
+
+#### Headers
+
+| Header | Descripción |
+| ------------ | ------------ |
+| `x-token` - *obligatorio* | Es el token de sesión de usuario, se requiere para poder tener acceso a ciertos recursos o realizar ciertas acciones |
+
+#### Params
+
+| Param | Descripción |
+| ------------ | ------------ |
+| `comentario id` - *obligatorio* | Es el id del comentario para eliminarlo |
+
+#### Ejemplo de respuesta (application/json)
+
+Si todo sale bien, responde enviando el comentario eliminado con un código *200*
+
+```json
+{
+    "id": "...",
+    "id_estudiante": "...",
+    "nombre": "...",
+    "apellido": "...",
+    "foto": "...",
+    "comentario": "...",
+    "articulo_id": "..."
 }
 ```
 

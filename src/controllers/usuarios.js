@@ -3,6 +3,7 @@ const {response, request} = require('express');
 const connection = require('../config/connection');
 const consultas = require('../helpers/consultas-helper');
 const bcrypt = require('bcrypt');
+const { subirFoto, borrarFoto } = require('../helpers/fireStorage-helper')
 const { agregarDatosEstudiante, crearConsultaUpdate } = require('../helpers/database-helpers');
 
 //Mostrar todos los usuario
@@ -26,7 +27,7 @@ const getById = async (req = request, res = response) => {
 
     try {
         //consulta de un usuario segun ID
-        const [result] = await connection.query(consultas.estudianteAndUserByAnyWhere + 'WHERE id_usuario = ?', [id]);
+        const [result] = await connection.query(consultas.estudianteAndUserByAnyWhere + 'WHERE es.id_estudiante = ?', [id]);
         res.status(200).json(result[0]);
 
     } catch (error) {
@@ -41,6 +42,10 @@ const getById = async (req = request, res = response) => {
 const postUsuario = async (req = request, res = response) => {
     
     const { nombre_usuario, password, nombre, apellido, cedula, nivel, id_facultad, id_carrera } = req.body;
+    let foto = null;
+
+    if( req.files && req.files.foto )
+        foto = req.files.foto;
 
     try {
         //Hasheo de contrasena que sera almacenada en la base de datos
@@ -53,9 +58,14 @@ const postUsuario = async (req = request, res = response) => {
         //Query para consultar los datos de un usuario
         const [resultUsuario] = await connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = LAST_INSERT_ID()');
         const usuario = resultUsuario[0];
+
+        let fotoUrl = null; 
+
+        if(foto)
+            fotoUrl = await subirFoto( foto );
     
         //Query para postear los datos de un estudiante
-        await connection.query(consultas.postEstudiante,[nombre, apellido, cedula, nivel, id_facultad, id_carrera, usuario.id]);
+        await connection.query(consultas.postEstudiante,[nombre, apellido, cedula, nivel, id_facultad, id_carrera, fotoUrl, usuario.id]);
     
         //Query para consultar los datos de un estudiante
         const [resultEstud] = await connection.query(consultas.estudianteByAnyWhere + 'WHERE es.id_estudiante = LAST_INSERT_ID()');
@@ -83,13 +93,24 @@ const putUsuario = async (req = request, res = response) =>{
     // datos extraidos por el req.body
     const body = req.body;
 
+    let foto = null;
+
+    if( req.files && req.files.foto )
+        foto = req.files.foto;
     
     try {
+
+        console.log(usuario);
         
-        // Aqui se realiza el update
-        /* const [consulta, datos] =  */await crearConsultaUpdate('estudiante', body, 'id_estudiante', usuario.id);
-        //await connection.query(consulta, datos);
+        if(foto) {
+            if( usuario.foto )
+                await borrarFoto( usuario.foto );
+            
+            body.foto = await subirFoto( foto );
+        }
     
+        await crearConsultaUpdate('estudiante', body, 'id_estudiante', usuario.id);
+
         const [result] = await connection.query(consultas.estudianteAndUserByAnyWhere + 'WHERE es.id_estudiante = ?', [usuario.id]);
     
         res.status(202).json(result[0]);
