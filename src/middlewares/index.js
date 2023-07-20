@@ -9,21 +9,28 @@ const { validarJWT } = require('../helpers/jwt-helpers')
  * @returns 
  */
 const validarJWTMiddleware = async ( req, res, next ) => {
-    const token = req.header('x-token');
 
-    if(!token) {
-        return res.send(401).json({msg: 'no se ha enviado el token'});
+    try {
+        const token = req.header('x-token');
+        
+        if(!token) {
+            return res.send(401).json({msg: 'no se ha enviado el token'});
+        }
+        
+        const { usuario, msg } = await validarJWT( token );
+    
+        if(!usuario) {
+            return res.status(401).json({ msg });
+        }
+    
+        req.usuarioAuth = usuario;
+    
+        next();
+    } catch (error) {
+        return res.status(500).json({
+            msg: 'algo salio mal al validar el token de sesión'
+        });
     }
-
-    const { usuario, msg } = await validarJWT( token );
-
-    if(!usuario) {
-        return res.status(401).json({ msg });
-    }
-
-    req.usuarioAuth = usuario;
-
-    next();
 };
 
 const validarRol = (rol) => {

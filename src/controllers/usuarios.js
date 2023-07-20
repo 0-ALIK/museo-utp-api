@@ -53,10 +53,11 @@ const postUsuario = async (req = request, res = response) => {
         const hashPassword = bcrypt.hashSync(password, salt);
     
         //Query para postear los datos de un usuario
-        await connection.query(consultas.postUsuario, [nombre_usuario, hashPassword])
+        const [ metadata ] = await connection.query(consultas.postUsuario, [nombre_usuario, hashPassword])
+        const newidusuario = metadata.insertId;
     
         //Query para consultar los datos de un usuario
-        const [resultUsuario] = await connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = LAST_INSERT_ID()');
+        const [resultUsuario] = await connection.query(consultas.usuarioByAnyWhere + 'WHERE id_usuario = ?', [newidusuario]);
         const usuario = resultUsuario[0];
 
         let fotoUrl = null; 
@@ -65,10 +66,11 @@ const postUsuario = async (req = request, res = response) => {
             fotoUrl = await subirFoto( foto );
     
         //Query para postear los datos de un estudiante
-        await connection.query(consultas.postEstudiante,[nombre, apellido, cedula, nivel, id_facultad, id_carrera, fotoUrl, usuario.id]);
+        const [ metadata2 ] = await connection.query(consultas.postEstudiante,[nombre, apellido, cedula, nivel, id_facultad, id_carrera, fotoUrl, usuario.id]);
+        const newidestud = metadata2.insertId;
     
         //Query para consultar los datos de un estudiante
-        const [resultEstud] = await connection.query(consultas.estudianteByAnyWhere + 'WHERE es.id_estudiante = LAST_INSERT_ID()');
+        const [resultEstud] = await connection.query(consultas.estudianteByAnyWhere + 'WHERE es.id_estudiante = ?', [newidestud]);
     
         agregarDatosEstudiante(usuario, resultEstud);
 

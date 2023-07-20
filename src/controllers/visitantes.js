@@ -9,17 +9,17 @@ const consulta = require('../helpers/consultas-helper');
  * @returns {Promise<void>} - Promesa que se resuelve cuando la operación está completa.
  */
 const getVisitante = async (req = request, res = response) => {
-  const id = req.params.id;
-  
-  try {
-    const [ resultado ] = await connection.query(consulta.visitanteById, [id]);
-    res.status(200).json(resultado);
-  } catch (error) {
-    res.status(500).json({
-      msg: 'no se puedo obtener todos los visitantes del artículo con id: '+id,
-      error
-    });
-  }
+	const id = req.params.id;
+	
+	try {
+		const [ resultado ] = await connection.query(consulta.visitanteById, [id]);
+		res.status(200).json(resultado);
+	} catch (error) {
+		res.status(500).json({
+		msg: 'no se puedo obtener todos los visitantes del artículo con id: '+id,
+		error
+		});
+	}
 };
 
 /**
@@ -29,24 +29,26 @@ const getVisitante = async (req = request, res = response) => {
  * @returns {Promise<void>} - Promesa que se resuelve cuando la operación está completa.
  */
 const postVisitante = async (req = request, res = response) => {
-  const estudiante = req.usuarioAuth;
-  const articulo = req.params.id;
+	const estudiante = req.usuarioAuth;
+	const articulo = req.params.id;
+	const query = 'SELECT * FROM visitante WHERE id_visitante = ?'
 
-  try {
+	try {
 
-    await connection.query(consulta.insertVisita, [estudiante.id, articulo]);
-    const [resultado] = await connection.query(consulta.getLastVisitante);
-    res.status(201).json(resultado[0]);
+		const [ metadata ] = await connection.query(consulta.insertVisita, [estudiante.id, articulo]);
+		const id = metadata.insertId; 
+		const [resultado] = await connection.query( query, [id] );
+		res.status(201).json(resultado[0]);
 
-  } catch (error) {
-    res.status(500).json({
-      msg: 'no se pudo realizar el registro de la nueva vista, quizá se deba a que el estudiante: '+estudiante.nombre+' ya visito este artículo'
-    });
-  }
+	} catch (error) {
+		res.status(500).json({
+		msg: 'no se pudo realizar el registro de la nueva vista, quizá se deba a que el estudiante: '+estudiante.nombre+' ya visito este artículo'
+		});
+	}
 
 };
 
 module.exports = {
-  getVisitante,
-  postVisitante
+	getVisitante,
+	postVisitante
 };

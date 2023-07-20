@@ -22,8 +22,9 @@ const postComent = async (req = request, res = response) => {
     const comentario = req.body.comentario;
 
     try {
-        await connection.query( consultas.dejarComentarioEnArticulo, [usuario.id, comentario, id] );
-        const [ result ] = await connection.query( consultas.getComentariosByAnyWhere + 'WHERE co.id_comentario = LAST_INSERT_ID()' );
+        const [ metadata ] = await connection.query( consultas.dejarComentarioEnArticulo, [usuario.id, comentario, id] );
+        const newid = metadata.insertId;
+        const [ result ] = await connection.query( consultas.getComentariosByAnyWhere + 'WHERE co.id_comentario = ?', [newid] );
         res.status(200).json(result[0]);
     } catch (error) {
         res.status(500).json({

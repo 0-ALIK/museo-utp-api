@@ -49,7 +49,7 @@ const consultas = {
     visitanteById: `
     SELECT
         es.id_estudiante AS id,
-        us.nombre_usuario AS usuario,
+        us.nombre_usuario,
         es.nombre,
         es.apellido,
         es.cedula,
@@ -76,13 +76,6 @@ const consultas = {
         visitante(estudiante_id, articulo_id)
     VALUES
         (?, ?)`,
-        
-    getLastVisitante: `
-    SELECT
-        *
-    FROM visitante
-    WHERE id_visitante = LAST_INSERT_ID()`,
-
 
     postUsuario: `
         INSERT INTO usuario (nombre_usuario, contrasena)
@@ -105,22 +98,35 @@ const consultas = {
     `,
     
     getAllArticulos: `
-    SELECT id_articulo as id, 
-    nombre, 
-    categoria_id,
-    descripcion, 
-    ubicacion,
-    dueno,
-    created_at, 
-    updated_at 
-    FROM articulo
-    limit ? 
-    offset ?`,
+    SELECT 
+    ar.id_articulo as id, 
+    ar.nombre,
+    ca.nombre as categoria,
+    ar.descripcion, 
+    ar.ubicacion,
+    ar.dueno,
+    ar.year,
+    ar.created_at, 
+    ar.updated_at 
+    FROM articulo as ar
+    JOIN categoria as ca
+    ON ca.id_categoria = ar.categoria_id`,
 
     getAllArticulosByName: `
-    SELECT * 
-    FROM articulo
-    WHERE nombre LIKE ?`,
+    SELECT 
+    ar.id_articulo as id, 
+    ar.nombre,
+    ca.nombre as categoria,
+    ar.descripcion, 
+    ar.ubicacion,
+    ar.dueno,
+    ar.year,
+    ar.created_at, 
+    ar.updated_at 
+    FROM articulo as ar
+    JOIN categoria as ca
+    ON ca.id_categoria = ar.categoria_id
+    WHERE LOWER(ar.nombre) LIKE CONCAT('%', LOWER( ? ), '%')`,
 
     getArticuloFotos: `
     SELECT * 
@@ -130,16 +136,19 @@ const consultas = {
 
     getArticuloById: `
     SELECT
-    id_articulo as id, 
-    nombre,
-    categoria_id,
-    descripcion, 
-    ubicacion,
-    dueno,
-    created_at, 
-    updated_at  
-    FROM articulo 
-    WHERE id_articulo = ?`,
+    ar.id_articulo as id, 
+    ar.nombre,
+    ca.nombre as categoria,
+    ar.descripcion, 
+    ar.ubicacion,
+    ar.dueno,
+    ar.year,
+    ar.created_at, 
+    ar.updated_at 
+    FROM articulo as ar
+    JOIN categoria as ca
+    ON ca.id_categoria = ar.categoria_id 
+    WHERE ar.id_articulo = ?`,
 
     getArticuloByIdMultimedios: `
     SELECT 
@@ -149,11 +158,8 @@ const consultas = {
     WHERE articulo_id = ?`,
 
     insertArticulo:`
-    INSERT INTO articulo(nombre, descripcion, categoria_id, ubicacion, dueno)
-    VALUES(?, ?, ?, ?, ?)`,   
-
-    getInsertedId:`select max(id_articulo) as id 
-    from articulo`,
+    INSERT INTO articulo(nombre, descripcion, categoria_id, ubicacion, dueno, year)
+    VALUES(?, ?, ?, ?, ?, ?)`,   
 
     insertMultimedio:`
     INSERT INTO multimedio(url, tipo, articulo_id)
@@ -199,7 +205,12 @@ const consultas = {
 
     borrarComentarioById: `
     DELETE FROM comentario WHERE estudiante_id = ? AND id_comentario = ?
-    `
+    `,
+
+    insertFacultad: 'INSERT INTO facultad (nombre) VALUES (?)',
+    borrarFacultad: 'DELETE FROM facultad WHERE id_facultad = ?', 
+    insertCarrera: 'INSERT INTO carrera (facultad_id, nombre) VALUES (?, ?)',
+    borrarCarrera: 'DELETE FROM carrera WHERE id_carrera = ?'
 };
 
 module.exports = consultas;

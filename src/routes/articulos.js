@@ -8,7 +8,7 @@ const router = Router();
 router.get('/all', [
     check('limit', 'limit debe ser un número').optional().isNumeric(),
     check('page', 'page debe ser un número').optional().isNumeric(),
-    check('query', 'query debe ser un número').optional().isNumeric(),
+    check('query', 'query debe ser un número').optional(),
     mostrarErrores
 ], getAll);
 
@@ -25,6 +25,7 @@ router.post('/', [
     check('categoria_id', 'categoria_id debe ser un número').notEmpty().isNumeric(),
     check('ubicacion', 'ubicacion es muy grande o muy pequeño').notEmpty().isLength({min: 2, max: 255}),
     check('dueno', 'dueno es muy grande o muy pequeño').notEmpty().isLength({min: 2, max: 255}),
+    check('year', 'year debe ser un número entero').notEmpty().isNumeric(),
     mostrarErrores
 ], createArticle);
 

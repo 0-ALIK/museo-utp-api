@@ -63,15 +63,15 @@ const populateArticuloMultimedios = async (result) => {
 };
 
 //recibe los campos de un articulo y lo inserta en la base de datos y retorna el articulo insertado
-const insertArticuloAndGetIt = async (nombre, descripcion, categoria_id, ubicacion, dueno) => {
+const insertArticuloAndGetIt = async (nombre, descripcion, categoria_id, ubicacion, dueno, year) => {
 	try{
-		await conecction.query(querys.insertArticulo, [ nombre, descripcion, categoria_id, ubicacion, dueno]);
+		const [ metadata ] = await conecction.query(querys.insertArticulo, [ nombre, descripcion, categoria_id, ubicacion, dueno, year ]);
 
-		const [ id ] = await conecction.query(querys.getInsertedId);
+		const id = metadata.insertId;
 
-		const [ result2 ] = await conecction.query(querys.getArticuloById, [ id[0].id ]);
+		const [ result ] = await conecction.query(querys.getArticuloById, [ id ]);
 
-		return result2;
+		return result;
 	} catch (error) {
 		throw new Error(error);
 	}
@@ -87,15 +87,15 @@ const uploadMultimedios = async (multimedios, articulo_id) => {
 
 				// se verifica el tipo de archivo y se asigna el path y su formato correspondiente
 				if (multimedio.mimetype === "image/jpeg" || multimedio.mimetype === "image/png" || multimedio.mimetype === "image/jpg") {
-					storageRef = ref(storage, `imagenes/${multimedio.name}`);
+					storageRef = ref(storage, `imagenes/${ Date.now() + multimedio.name}`);
 					tipo = "imagen";
 				}
 				if (multimedio.mimetype === "video/mp4") {
-					storageRef = ref(storage, `videos/${multimedio.name}`);
+					storageRef = ref(storage, `videos/${ Date.now() + multimedio.name}`);
 					tipo = "video";
 				}
 				if (multimedio.mimetype === "audio/mpeg") {
-					storageRef = ref(storage, `audios/${multimedio.name}`);
+					storageRef = ref(storage, `audios/${ Date.now() + multimedio.name}`);
 					tipo = "audio";
 				}
 

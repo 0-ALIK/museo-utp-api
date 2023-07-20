@@ -29,9 +29,10 @@ Este proyecto está siendo desarrollado por el equipo de desarrollo del departam
 
 ## Documentación
 
-* [Login](#login-autenticación)
+* [Login y auth](#login-autenticación)
 * [Usuarios](#usuarios)
 * [Carreras y facultades](#facultades-y-carreras)
+* [Categorias](#categorias)
 * [Visitas](#visitantes)
 * [Artículos](#articulos)
 * [Comentarios](#comentarios)
@@ -112,6 +113,33 @@ Importante, este token debe ser almacenado ya sea en el localStorage, una cookie
 Si algo sale mal, responde con un código de status *400*
 
 ---
+
+### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/auth
+
+Permite validar el token de sesión y obtener los datos del usuario ligado al token
+
+#### Headers
+
+| Header | Descripción |
+| ------------ | ------------ |
+| `x-token` - *obligatorio* | Es el token de sesión de usuario |
+
+#### Ejemplo de respuesta (application/json)
+
+Responde enviado al usuario al que pertenece el token de sesión enviado en el header
+
+```json
+{
+    "id": "...",
+    "usuario": "...",
+    "rol": "...",
+    "created_at": "...",
+    "updated_at": "...",
+    ...
+}
+```
+
+---
 ---
 ## FACULTADES Y CARRERAS    
 ---
@@ -135,9 +163,45 @@ Obtener todas las facultades
 
 ---
 
+### <span style="background-color:#67DA30; color: white; padding: 2px 5px; border-radius: 50px;">POST</span> /api/facultades `AUTH ADMIN`
+
+Permite publicar una nueva facultad
+
+#### Headers
+
+| Header | Descripción |
+| ------------ | ------------ |
+| `x-token` - *obligatorio* | Es el token de sesión de usuario |
+
+#### Body data (application/json)
+
+| Data | Validaciones |
+| ------------ | ------------ |
+| `nombre` - *obligatorio* | lenght(min: 2, max: 200) |
+
+---
+
+### <span style="background-color:#DA4E30; color: white; padding: 2px 5px; border-radius: 50px;">DELETE</span> /api/facultades/**{facultad id}** `AUTH ADMIN`
+
+permite realizar la eliminación en base al id de la facultad
+
+#### Headers
+
+| Header | Descripción |
+| ------------ | ------------ |
+| `x-token` - *obligatorio* | Es el token de sesión de usuario |
+
+#### Params
+
+| Param | Descripción | Validaciones | 
+| ------------ | ------------ | ------------ |
+| `facultad id` - *obligatorio* | Es el id de la facultad | numérico |
+
+---
+
 ### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/carreras/all
 
-Obtener todas las facultades
+Obtener todas las carreras
 
 #### Ejemplo de respuesta (application/json)
 
@@ -154,9 +218,9 @@ Obtener todas las facultades
 
 ---
 
-### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/carreras/allbyfac/{facultad id}
+### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/carreras/facultad/{facultad id}
 
-Obtener todas las facultades
+Obtener todas las carreras en base al id de una facultad
 
 #### Params
 
@@ -176,6 +240,99 @@ Obtener todas las facultades
     ...
 ]
 ```
+
+---
+
+### <span style="background-color:#67DA30; color: white; padding: 2px 5px; border-radius: 50px;">POST</span> /api/carreras `AUTH ADMIN`
+
+#### Headers
+
+| Header | Descripción |
+| ------------ | ------------ |
+| `x-token` - *obligatorio* | Es el token de sesión de usuario |
+
+#### Body data (application/json)
+
+| Data | Validaciones |
+| ------------ | ------------ |
+| `nombre` - *obligatorio* | lenght(min: 2, max: 200) |
+| `facultad_id` - *obligatorio* | numérico |
+
+---
+
+### <span style="background-color:#DA4E30; color: white; padding: 2px 5px; border-radius: 50px;">DELETE</span> /api/carreras/**{carrera id}** `AUTH ADMIN`
+
+Permite realizar la eliminación de una carrera en base a su id
+
+#### Headers
+
+| Header | Descripción |
+| ------------ | ------------ |
+| `x-token` - *obligatorio* | Es el token de sesión de usuario |
+
+#### Params
+
+| Param | Descripción | Validaciones | 
+| ------------ | ------------ | ------------ |
+| `carrera id` - *obligatorio* | Es el id de la carrera | numérico |
+
+---
+---
+## CATEGORIAS
+---
+---
+
+### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/categorias/all
+
+Obtener todas las categorias
+
+#### Ejemplo de respuesta (application/json)
+
+```json
+[
+    {
+        "id": "...",
+        "nombre": "..."
+    },
+    ...
+]
+```
+
+---
+
+### <span style="background-color:#67DA30; color: white; padding: 2px 5px; border-radius: 50px;">POST</span> /api/categorias `AUTH ADMIN`
+
+Permite publicar una nueva categoria
+
+#### Headers
+
+| Header | Descripción |
+| ------------ | ------------ |
+| `x-token` - *obligatorio* | Es el token de sesión de usuario |
+
+#### Body data (application/json)
+
+| Data | Validaciones |
+| ------------ | ------------ |
+| `nombre` - *obligatorio* | lenght(min: 2, max: 200) |
+
+---
+
+### <span style="background-color:#DA4E30; color: white; padding: 2px 5px; border-radius: 50px;">DELETE</span> /api/categorias/**{categoria id}** `AUTH ADMIN`
+
+permite realizar la eliminación en base al id de la categoria
+
+#### Headers
+
+| Header | Descripción |
+| ------------ | ------------ |
+| `x-token` - *obligatorio* | Es el token de sesión de usuario |
+
+#### Params
+
+| Param | Descripción | Validaciones | 
+| ------------ | ------------ | ------------ |
+| `categoria id` - *obligatorio* | Es el id de la facultad | numérico |
 
 ---
 ---

@@ -1,25 +1,24 @@
 const { Router } = require('express');
-const { getAll, postFacultad, deleteFacultad } = require('../controllers/facultades');
+const { getAll, postCategoria, deleteCategoria } = require('../controllers/categorias');
 const { validarJWTMiddleware, validarRol, mostrarErrores } = require('../middlewares');
 const { check } = require('express-validator');
 
 const router = Router();
 
-// Obtener todos las facultades de la base de datos
 router.get('/all', getAll);
 
 router.post('/', [
     validarJWTMiddleware,
     validarRol('ADMIN'),
-    check('nombre', 'nombre es muy largo o muy corto').notEmpty().isLength({min: 2, max: 200}),
+    check('nombre', 'nombre es muy corto o muy largo').notEmpty().isLength({min: 2, max: 60}),
     mostrarErrores
-], postFacultad);
+], postCategoria);
 
 router.delete('/:id', [
     validarJWTMiddleware,
     validarRol('ADMIN'),
-    check('id', 'id debe ser numérico').isNumeric(),
+    check('id', 'el id debe ser un número').isNumeric(),
     mostrarErrores
-], deleteFacultad);
+], deleteCategoria);
 
 module.exports = router;

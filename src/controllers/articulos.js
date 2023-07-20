@@ -9,7 +9,7 @@ const getAll = async (req = request, res = response) => {
         //verificar si hay query para buscar por nombre
         if (req.query.query) {
             const nombre = req.query.query || "";
-            const [ result ] = await conecction.query(querys.getAllArticulosByName, ["%" + nombre + "%"]);
+            const [ result ] = await conecction.query(querys.getAllArticulosByName, [ nombre ]);
 
             //recorre el resultado y agrega las fotos de cada articulo
             const resultado = await articulosHelper.populateArticulosFotos(result);
@@ -17,10 +17,7 @@ const getAll = async (req = request, res = response) => {
             return res.json(resultado);
         }
 
-        const limit = + req.query.limit || 10;
-        const page = limit * (req.query.page - 1 || 0);
-
-        const [ result ] = await conecction.query(querys.getAllArticulos, [limit, page]);
+        const [ result ] = await conecction.query( querys.getAllArticulos );
         const articulos = await articulosHelper.populateArticulosFotos(result);
         res.status(200).json(articulos);
     } catch (error) {
@@ -68,11 +65,11 @@ const createArticle = async (req = request, res = response) => {
     }
 
     //JSON.PARSE(req.body.data) -> convierte el stringified en un objeto
-    const { nombre, descripcion, categoria_id, ubicacion, dueno } = req.body;
+    const { nombre, descripcion, categoria_id, ubicacion, dueno, year } = req.body;
 
     try {
         //inserta el articulo y retorna el articulo insertado
-        const articulo = await articulosHelper.insertArticuloAndGetIt(nombre, descripcion, categoria_id, ubicacion, dueno);
+        const articulo = await articulosHelper.insertArticuloAndGetIt(nombre, descripcion, categoria_id, ubicacion, dueno, year);
 
         //sube los multimedios al storage y los sube a la base de datos
         if(multimedios)

@@ -5,12 +5,21 @@ const { compareSync } = require('bcrypt');
 const { generarJWT } = require('../helpers/jwt-helpers');
 const { agregarDatosEstudiante } = require('../helpers/database-helpers');
 
+const auth = async (req = request, res = response) => {
+    try {
+        
+        res.status(200).json( req.usuarioAuth )
+
+    } catch (error) {
+        res.status(500).json({msg: 'algo salio mal al validar tu sesión'})
+    }
+};
+
 const login = async (req = request, res = response) => {
 
     const { nombre_usuario, password } = req.body; 
 
     try {
-        
         
         const [ resultUsuario ] = await connection.query( consultas.usuarioByAnyWhere + 'WHERE nombre_usuario = ?', [nombre_usuario]);
         const usuario = resultUsuario[0];
@@ -47,5 +56,6 @@ const login = async (req = request, res = response) => {
 };
 
 module.exports = {
-    login
+    login,
+    auth
 };

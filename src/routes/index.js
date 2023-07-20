@@ -5,6 +5,7 @@ const articulos = require('./articulos');
 const auth = require('./auth');
 const visitantes = require('./visitantes');
 const comentarios = require('./comentarios');
+const categorias = require('./categorias');
 
 module.exports = {
     facultades,
@@ -13,5 +14,6 @@ module.exports = {
     usuarios,
     articulos,
     auth,
-    comentarios
+    comentarios,
+    categorias
 };
