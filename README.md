@@ -598,7 +598,7 @@ Si algo sale mal, responde con un código de status *400*
 ---
 ---
 
-### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/artículo/all
+### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/articulos/all
 
 Retorna todos los artículos de la base de datos
 
@@ -606,8 +606,6 @@ Retorna todos los artículos de la base de datos
 
 | Param | Descripción | Validaciones |
 | ------------ | ------------ | ------------ |
-| `limit` - *opcional* | Especifica el límite de resultados en la respuesta | numérico |
-| `page` - *opcional* | Para la paginación | numérico |
 | `query` - *opcional* | Hace que sólo hagan match los registros que conicidan con el query de búsqueda | numérico |
 
 #### Ejemplo de respuesta (application/json)
@@ -637,7 +635,7 @@ Si algo sale mal, responde con un código de status *400*
 
 ---
 
-### <span style="background-color:#30DAA3; color: white; padding: 2px 5px;border-radius: 50px;">GET</span> /api/artículo/**{artículo id}**
+### <span style="background-color:#30DAA3; color: white; padding: 2px 5px;border-radius: 50px;">GET</span> /api/articulos/**{artículo id}**
 
 Obtener un articulo en específico de la base de datos, a través de su ID
 
@@ -678,7 +676,7 @@ Si algo sale mal, responde con un código de status *400*
 
 ---
 
-### <span style="background-color:#67DA30; color: white; padding: 2px 5px; border-radius: 50px;">POST</span> /api/artículo `AUTH ADMIN`
+### <span style="background-color:#67DA30; color: white; padding: 2px 5px; border-radius: 50px;">POST</span> /api/articulos `AUTH ADMIN`
 
 Registrar un nuevo artículo en la base de datos, esta acción sólo la puede realizar un administrador, por lo tanto, se debe suministrar un token de sesión para validar que se trate de un administrador 
 
@@ -697,6 +695,7 @@ Registrar un nuevo artículo en la base de datos, esta acción sólo la puede re
 | `categoria_id` - *obligatorio* | numérico |
 | `ubicacion` - *obligatorio* | lenght(min: 2, max: 255) | 
 | `dueno` - *obligatorio* | lenght(min: 2, max: 120) |
+| `year` - *obligatorio* | numérico |
 | `multimedios` - *opcional* | Es todo el conjunto de Files multimedios, utilizar **input multiple** |
 
 #### Ejemplo de respuesta (application/json)
@@ -728,7 +727,7 @@ Si algo sale mal, responde con un código de status *400*
 
 ---
 
-### <span style="background-color:#DAA330; color: white; padding: 2px 5px; border-radius: 50px;">PUT</span> /api/artículo/**{artículo id}** `AUTH ADMIN`
+### <span style="background-color:#DAA330; color: white; padding: 2px 5px; border-radius: 50px;">PUT</span> /api/articulos/**{artículo id}** `AUTH ADMIN`
 
 Actualizar un artículo ya existente en la base de datos, esta acción sólo la puede realizar un administrador, por lo tanto, se debe suministrar un token de sesión para validar que se trate de un administrador 
 
@@ -747,6 +746,7 @@ Actualizar un artículo ya existente en la base de datos, esta acción sólo la 
 | `categoria_id` - *opcional* | numérico |
 | `ubicacion` - *opcional* | lenght(min: 2, max: 255) | 
 | `dueno` - *opcional* | lenght(min: 2, max: 120) |
+| `year` - *opcional* | numérico |
 | `articulosBorrarId` - *opcional* | Array numérico, es un arreglo con los ids de los elementos multimedios del artículo |
 | `multimedios` - *opcional* | Es todo el conjunto de Files multimedios, utilizar **input multiple** |
 
@@ -779,7 +779,7 @@ Si algo sale mal, responde con un código de status *400*
 
 ---
 
-### <span style="background-color:#DA4E30; color: white; padding: 2px 5px; border-radius: 50px;">DELETE</span> /api/artículo/**{artículo id}** `AUTH ADMIN`
+### <span style="background-color:#DA4E30; color: white; padding: 2px 5px; border-radius: 50px;">DELETE</span> /api/articulos/**{artículo id}** `AUTH ADMIN`
 
 Permite realizar la eliminación de un artículo de la base de datos, esta acción sólo la puede realizar un administrador, por lo tanto, se debe suministrar un token de sesión para validar que se trate de un administrador
 
