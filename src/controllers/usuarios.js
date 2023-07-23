@@ -101,8 +101,6 @@ const putUsuario = async (req = request, res = response) =>{
         foto = req.files.foto;
     
     try {
-
-        console.log(usuario);
         
         if(foto) {
             if( usuario.foto )
@@ -121,7 +119,6 @@ const putUsuario = async (req = request, res = response) =>{
         res.status(500).json({
             msg: 'error al hacer el update',
             datos,
-            consulta,
             error
         });
     }

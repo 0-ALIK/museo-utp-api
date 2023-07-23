@@ -1,6 +1,8 @@
 const connection = require("../config/connection");
 
 const nameRegExp = /^[a-zA-Z0-9_]+$/; 
+const cedulaRegExp = /^([0-9]-[0-9]{3}-[0-9]{4}|[1][0-3]-[0-9]{3}-[0-9]{4}|[2][0]-[0-9]{2}-[0-9]{4}|[E]-[0-9]-[0-9]{6}|[E]-[0-9]{4}-[0-9]{5}|[N]-[0-9]{2}-[0-9]{5}|[N]-[0-9]{3}-[0-9]{4}|[P][E]-[0-9]{3}-[0-9]{4}|[E][E]-[0-9]{3}-[0-9]{3})$/;
+
 
 /**
  * Si un usuario tiene el rol 'ESTUD' es porque es estudiante,
@@ -65,8 +67,33 @@ const crearConsultaUpdate = async (tabla, data, campoid, id) => {
     await connection.query( consulta, datos ); 
 };
 
+const existeNombreUsuario = async ( value ) => {
+    const consulta = 'SELECT * FROM usuario WHERE nombre_usuario = ?'; 
+    const [ usuarios ] = await connection.query( consulta, [ value ] );
+    const usuario = usuarios[0];
+    if( usuario ) {
+        throw new Error('El nombre de usuario '+value+' ya esta ocupado');
+    }
+
+    return true;
+};
+
+const existeCedula = async ( value ) => {
+    const consulta = 'SELECT * FROM estudiante WHERE cedula = ?'; 
+    const [ estudiantes ] = await connection.query( consulta, [ value ] );
+    const estudiante = estudiantes[0];
+    if( estudiante ) {
+        throw new Error('La cédula '+value+' ya esta ocupada');
+    }
+
+    return true;
+};
+
 module.exports = {
     agregarDatosEstudiante,
     crearConsultaUpdate,
-    nameRegExp
+    nameRegExp,
+    cedulaRegExp,
+    existeNombreUsuario,
+    existeCedula
 };

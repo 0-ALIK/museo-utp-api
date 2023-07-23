@@ -7,7 +7,9 @@ const { crearConsultaUpdate } = require("../helpers/database-helpers");
 const getAll = async (req = request, res = response) => {
     try {
         //verificar si hay query para buscar por nombre
-        if (req.query.query) {
+        let extras = "";
+        let data = []
+        /* if (req.query.query) {
             const nombre = req.query.query || "";
             const [ result ] = await conecction.query(querys.getAllArticulosByName, [ nombre ]);
 
@@ -15,6 +17,28 @@ const getAll = async (req = request, res = response) => {
             const resultado = await articulosHelper.populateArticulosFotos(result);
 
             return res.json(resultado);
+        } */
+
+        console.log(req.query);
+
+        if(req.query.query && req.query.query?.length !== 0) {
+            extras+="LOWER(ar.nombre) LIKE CONCAT('%', LOWER( ? ), '%') ";
+            data.push( req.query.query );
+        }
+
+        if(req.query.categoria && req.query.categoria?.length !== 0) {
+            if(extras.length !== 0)
+                extras+="AND ";
+            extras+="ar.categoria_id = ? ";
+            data.push( req.query.categoria );
+        }
+
+        console.log({extras, data});
+
+        if(extras.length !== 0) {
+            const [ result ] = await conecction.query( querys.getAllArticulos + "WHERE " + extras, data );    
+            const articulos = await articulosHelper.populateArticulosFotos(result);
+            return res.status(200).json(articulos);
         }
 
         const [ result ] = await conecction.query( querys.getAllArticulos );

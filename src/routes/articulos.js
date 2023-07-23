@@ -6,9 +6,6 @@ const { check } = require('express-validator');
 const router = Router();
 
 router.get('/all', [
-    check('limit', 'limit debe ser un número').optional().isNumeric(),
-    check('page', 'page debe ser un número').optional().isNumeric(),
-    check('query', 'query debe ser un número').optional(),
     mostrarErrores
 ], getAll);
 

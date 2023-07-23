@@ -606,7 +606,8 @@ Retorna todos los artículos de la base de datos
 
 | Param | Descripción | Validaciones |
 | ------------ | ------------ | ------------ |
-| `query` - *opcional* | Hace que sólo hagan match los registros que conicidan con el query de búsqueda | numérico |
+| `query` - *opcional* | Realizar búsqueda de artículos por su nombre | texto |
+| `categoria` - *opcional* | Realizar búsqueda de artículos por su id de categoria | numérico |
 
 #### Ejemplo de respuesta (application/json)
 

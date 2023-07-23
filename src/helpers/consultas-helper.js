@@ -110,7 +110,7 @@ const consultas = {
     ar.updated_at 
     FROM articulo as ar
     JOIN categoria as ca
-    ON ca.id_categoria = ar.categoria_id`,
+    ON ca.id_categoria = ar.categoria_id `,
 
     getAllArticulosByName: `
     SELECT 
