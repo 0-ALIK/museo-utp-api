@@ -33,7 +33,7 @@ const postFacultad = async ( req = request, res = response ) => {
 const deleteFacultad = async ( req = request, res = response ) => {
     const id = req.params.id;
     try {
-        await connection.query( consultas.deleteFacultad, [id] );
+        await connection.query( consultas.borrarFacultad, [id] );
         res.status(200).json(true);
     } catch (error) {
         res.status(500).json({

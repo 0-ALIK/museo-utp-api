@@ -9,17 +9,6 @@ const getAll = async (req = request, res = response) => {
         //verificar si hay query para buscar por nombre
         let extras = "";
         let data = []
-        /* if (req.query.query) {
-            const nombre = req.query.query || "";
-            const [ result ] = await conecction.query(querys.getAllArticulosByName, [ nombre ]);
-
-            //recorre el resultado y agrega las fotos de cada articulo
-            const resultado = await articulosHelper.populateArticulosFotos(result);
-
-            return res.json(resultado);
-        } */
-
-        console.log(req.query);
 
         if(req.query.query && req.query.query?.length !== 0) {
             extras+="LOWER(ar.nombre) LIKE CONCAT('%', LOWER( ? ), '%') ";
@@ -32,8 +21,6 @@ const getAll = async (req = request, res = response) => {
             extras+="ar.categoria_id = ? ";
             data.push( req.query.categoria );
         }
-
-        console.log({extras, data});
 
         if(extras.length !== 0) {
             const [ result ] = await conecction.query( querys.getAllArticulos + "WHERE " + extras, data );    
