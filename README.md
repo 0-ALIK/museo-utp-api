@@ -222,7 +222,7 @@ Obtener todas las carreras
     {
         "id": "...",
         "nombre": "...",
-        "facultad_id": "..."
+        "facultad": "..."
     },
     ...
 ]
@@ -247,7 +247,7 @@ Obtener todas las carreras en base al id de una facultad
     {
         "id": "...",
         "nombre": "...",
-        "facultad_id": "..."
+        "facultad": "..."
     },
     ...
 ]

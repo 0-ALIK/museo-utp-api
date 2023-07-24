@@ -210,7 +210,14 @@ const consultas = {
     selectFacultad: 'SELECT id_facultad as id, nombre FROM facultad ',
     insertFacultad: 'INSERT INTO facultad (nombre) VALUES (?)',
     borrarFacultad: 'DELETE FROM facultad WHERE id_facultad = ?', 
-    selectCarrera: 'SELECT id_carrera as id, nombre, facultad_id FROM carrera ',
+    selectCarrera: `
+    SELECT 
+        ca.id_carrera as id, 
+        ca.nombre, 
+        fa.nombre as facultad
+    FROM carrera as ca 
+    JOIN facultad as fa 
+    ON ca.facultad_id = fa.id_facultad `,
     insertCarrera: 'INSERT INTO carrera (facultad_id, nombre) VALUES (?, ?)',
     borrarCarrera: 'DELETE FROM carrera WHERE id_carrera = ?'
 };
