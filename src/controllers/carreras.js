@@ -1,6 +1,7 @@
 const { request, response } = require('express');
 const connection = require('../config/connection');
 const consultas = require('../helpers/consultas-helper');
+const { body } = require('express-validator');
 
 const getAll = async (req = request, res = response) => {
     let extras = "";

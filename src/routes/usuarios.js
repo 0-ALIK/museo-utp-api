@@ -40,7 +40,6 @@ router.post('/',[
 //Ruta para modificar un usuario
 router.put('/', [
     validarJWTMiddleware,
-    validarRol('ESTUD'),
     check('nombre', 'nombre es muy largo o muy corto').optional().isLength({min: 2, max: 30}),
     check('apellido', 'apellido es muy largo o muy corto').optional().isLength({min: 2, max: 30}),
     check('nivel', 'nivel no puede estar nulo y debe ser un número').optional().isNumeric(),

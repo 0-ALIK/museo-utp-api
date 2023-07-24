@@ -43,12 +43,9 @@ const validarJWT = async (token = '') => {
         if(!usuario) {
             return {msg: 'usuario no existe'}
         }
-
-        if(usuario.rol === 'ESTUD') {
         
-            const [ resultEstud ] = await connection.query( consultas.estudianteByAnyWhere + 'WHERE es.usuario_id = ?', [usuario.id] );
-            agregarDatosEstudiante(usuario, resultEstud);
-        }
+        const [ resultEstud ] = await connection.query( consultas.estudianteByAnyWhere + 'WHERE es.usuario_id = ?', [usuario.id] );
+        agregarDatosEstudiante(usuario, resultEstud)
 
         return { usuario };
 
