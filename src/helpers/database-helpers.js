@@ -26,6 +26,18 @@ const agregarDatosEstudiante = (usuario, result) => {
         usuario.foto = result[0].foto;
 };
 
+function validarDataForUpdate(objeto, propiedadesPermitidas) {
+    const propiedadesObjeto = Object.keys(objeto);
+  
+    const propiedadesNoPermitidas = propiedadesObjeto.filter( propiedad => !propiedadesPermitidas.includes(propiedad) );
+  
+    if (propiedadesNoPermitidas.length > 0) {
+        return false;
+    }
+  
+    return true;
+} 
+
 /**
  * En esta API, para hacer un update, todos los datos son opcionales
  * por lo tanto, hay que construir una consulta UPDATE en base a los datos
@@ -42,7 +54,6 @@ const crearConsultaUpdate = async (tabla, data, campoid, id) => {
     let datos = [];
 
     if(keys.length === 0) {
-        console.log('No hay datos para actualizar, no se realiza el update en: '+tabla);
         return;
     }
 
@@ -95,5 +106,6 @@ module.exports = {
     nameRegExp,
     cedulaRegExp,
     existeNombreUsuario,
-    existeCedula
+    existeCedula,
+    validarDataForUpdate
 };

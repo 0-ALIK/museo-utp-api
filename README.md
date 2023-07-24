@@ -149,6 +149,12 @@ Responde enviado al usuario al que pertenece el token de sesión enviado en el h
 
 Obtener todas las facultades
 
+#### Query params
+
+| Param | Descripción | Validaciones |
+| ------------ | ------------ | ------------ |
+| `query` - *opcional* | Realizar búsqueda por su nombre | texto |
+
 #### Ejemplo de respuesta (application/json)
 
 ```json
@@ -202,6 +208,12 @@ permite realizar la eliminación en base al id de la facultad
 ### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/carreras/all
 
 Obtener todas las carreras
+
+#### Query params
+
+| Param | Descripción | Validaciones |
+| ------------ | ------------ | ------------ |
+| `query` - *opcional* | Realizar búsqueda por su nombre | texto |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -286,6 +298,12 @@ Permite realizar la eliminación de una carrera en base a su id
 
 Obtener todas las categorias
 
+#### Query params
+
+| Param | Descripción | Validaciones |
+| ------------ | ------------ | ------------ |
+| `query` - *opcional* | Realizar búsqueda por su nombre | texto |
+
 #### Ejemplo de respuesta (application/json)
 
 ```json
@@ -343,6 +361,12 @@ permite realizar la eliminación en base al id de la categoria
 ### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/usuarios/all
 
 Obtener todos los usuarios de tipo ESTUD de la base de datos
+
+#### Query params
+
+| Param | Descripción | Validaciones |
+| ------------ | ------------ | ------------ |
+| `query` - *opcional* | Realizar búsqueda por su nombre_usuario | texto |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -448,7 +472,6 @@ Actualiza los datos de un usuario, se hace en base a su token de sesión
 
 | Data | Validaciones |
 | ------------ | ------------ |
-| `nombre_usuario` - *opcional* | Las mismas que en el post |
 | `nombre` - *opcional* | Las mismas que en el post |
 | `apellido` - *opcional* | Las mismas que en el post |
 | `cedula` - *opcional* | Las mismas que en el post |

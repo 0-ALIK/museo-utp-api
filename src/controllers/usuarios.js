@@ -4,12 +4,25 @@ const connection = require('../config/connection');
 const consultas = require('../helpers/consultas-helper');
 const bcrypt = require('bcrypt');
 const { subirFoto, borrarFoto } = require('../helpers/fireStorage-helper')
-const { agregarDatosEstudiante, crearConsultaUpdate } = require('../helpers/database-helpers');
+const { agregarDatosEstudiante, crearConsultaUpdate, validarDataForUpdate } = require('../helpers/database-helpers');
 
 //Mostrar todos los usuario
 const getAll = async (req = request, res = response) => {
+
+    let extras = "";
+    let data = []
+
+    if(req.query.query && req.query.query?.length !== 0) {
+        extras+="LOWER(us.nombre_usuario) LIKE CONCAT('%', LOWER( ? ), '%') ";
+        data.push( req.query.query );
+    }
     
     try {
+        if(extras.length !== 0) {
+            const [ result ] = await connection.query( consultas.estudianteAndUserByAnyWhere + "WHERE " + extras, data );    
+            return res.status(200).json(result);
+        }
+
         //consulta de todos los estudiantes
         const [result] = await connection.query(consultas.estudianteAndUserByAnyWhere);
         res.status(200).json(result);
@@ -102,13 +115,17 @@ const putUsuario = async (req = request, res = response) =>{
     
     try {
         
+        if ( !validarDataForUpdate( body, ['nombre', 'apellido', 'foto', 'nivel', 'id_facultad', 'id_carrera'] ) ) {    
+            return res.status(400).json({msg: 'enviaste un dato que no se puede actualizar o no existe'});
+        }
+        
         if(foto) {
             if( usuario.foto )
                 await borrarFoto( usuario.foto );
             
             body.foto = await subirFoto( foto );
         }
-    
+
         await crearConsultaUpdate('estudiante', body, 'id_estudiante', usuario.id);
 
         const [result] = await connection.query(consultas.estudianteAndUserByAnyWhere + 'WHERE es.id_estudiante = ?', [usuario.id]);
@@ -130,15 +147,19 @@ const deleteUsuario = async (req = request, res = response) => {
 
     try {
         //Query para consultar los datos de un usuario
-        const [ result ] = await connection.query(consultas.estudianteByAnyWhere + 'WHERE es.id_estudiante = ?', [id]);
+        const [ result ] = await connection.query(consultas.estudianteAndUserByAnyWhere + 'WHERE es.id_estudiante = ?', [id]);
         const usuario = result[0];
 
         if(!usuario) {
             return res.status(400).json({msg: 'no existe estudiante con id: '+id});
         }
+
+        if(usuario.rol === 'ADMIN') {
+            return res.status(403).json({msg: 'no puedes eliminar al ADMIN: '+usuario.nombre_usuario});
+        }
     
         //Query para eliminar un usuario
-        await connection.query(consultas.deleteUsuario + 'WHERE id_usuario = ?', [usuario.usuario_id]);
+        await connection.query(consultas.deleteUsuario + 'WHERE id_usuario = ?', [usuario.id_usuario]);
     
         res.status(202).json(usuario);
     } catch (error) {

@@ -30,6 +30,7 @@ const consultas = {
     SELECT
         es.id_estudiante as id,
         us.nombre_usuario,
+        us.id_usuario,
         us.rol,
         es.nombre,
         es.apellido, 
@@ -206,9 +207,10 @@ const consultas = {
     borrarComentarioById: `
     DELETE FROM comentario WHERE estudiante_id = ? AND id_comentario = ?
     `,
-
+    selectFacultad: 'SELECT id_facultad as id, nombre FROM facultad ',
     insertFacultad: 'INSERT INTO facultad (nombre) VALUES (?)',
     borrarFacultad: 'DELETE FROM facultad WHERE id_facultad = ?', 
+    selectCarrera: 'SELECT id_carrera as id, nombre, facultad_id FROM carrera ',
     insertCarrera: 'INSERT INTO carrera (facultad_id, nombre) VALUES (?, ?)',
     borrarCarrera: 'DELETE FROM carrera WHERE id_carrera = ?'
 };

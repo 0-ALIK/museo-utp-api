@@ -2,7 +2,7 @@ const { request, response } = require("express");
 const conecction = require("../config/connection");
 const querys = require("../helpers/consultas-helper");
 const articulosHelper = require("../helpers/articulos-helper");
-const { crearConsultaUpdate } = require("../helpers/database-helpers");
+const { crearConsultaUpdate, validarDataForUpdate } = require("../helpers/database-helpers");
 
 const getAll = async (req = request, res = response) => {
     try {
@@ -143,6 +143,10 @@ const editArticle = async (req = request, res = response) => {
     const { articulosBorrarId, ...data } = req.body;
 
     try {
+        if ( !validarDataForUpdate( data, ['nombre', 'descripcion', 'categoria_id', 'ubicacion', 'dueno', 'year'] ) ) {    
+            return res.status(400).json({msg: 'enviaste un dato que no se puede actualizar o no existe'});
+        }
+
         const [ articulosVerify ] = await conecction.query(querys.getArticuloById, [id]);
         if(articulosVerify.length === 0)
             return res.status(400).json({msg: 'No existe articulo con id: '+id});    
