@@ -8,7 +8,7 @@ const getAll = async (req = request, res = response) => {
     let data = []
 
     if(req.query.query && req.query.query?.length !== 0) {
-        extras+="LOWER(nombre) LIKE CONCAT('%', LOWER( ? ), '%') ";
+        extras+="LOWER(ca.nombre) LIKE CONCAT('%', LOWER( ? ), '%') ";
         data.push( req.query.query );
     }
 
