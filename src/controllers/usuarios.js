@@ -160,6 +160,9 @@ const deleteUsuario = async (req = request, res = response) => {
     
         //Query para eliminar un usuario
         await connection.query(consultas.deleteUsuario + 'WHERE id_usuario = ?', [usuario.id_usuario]);
+
+        if( usuario.foto )
+            await borrarFoto( usuario.foto );
     
         res.status(202).json(usuario);
     } catch (error) {
