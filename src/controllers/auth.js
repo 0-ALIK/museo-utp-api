@@ -32,11 +32,8 @@ const login = async (req = request, res = response) => {
 
         const token = await generarJWT( usuario.id );
 
-        if(usuario.rol === 'ESTUD') {
-
-            const [ resultEstud ] = await connection.query( consultas.estudianteByAnyWhere + 'WHERE es.usuario_id = ?', [usuario.id] );
-            agregarDatosEstudiante( usuario, resultEstud );
-        }
+        const [ resultEstud ] = await connection.query( consultas.estudianteByAnyWhere + 'WHERE es.usuario_id = ?', [usuario.id] );
+        agregarDatosEstudiante( usuario, resultEstud );
 
         delete usuario.password;
 
