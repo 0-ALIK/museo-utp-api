@@ -115,7 +115,7 @@ const putUsuario = async (req = request, res = response) =>{
     
     try {
         
-        if ( !validarDataForUpdate( body, ['nombre', 'apellido', 'foto', 'nivel', 'id_facultad', 'id_carrera'] ) ) {    
+        if ( !validarDataForUpdate( body, ['nombre', 'apellido', 'foto', 'nivel', 'facultad_id', 'carrera_id', 'cedula'] ) ) {    
             return res.status(400).json({msg: 'enviaste un dato que no se puede actualizar o no existe'});
         }
         
@@ -135,7 +135,6 @@ const putUsuario = async (req = request, res = response) =>{
     } catch (error) {
         res.status(500).json({
             msg: 'error al hacer el update',
-            datos,
             error
         });
     }

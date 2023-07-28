@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const { facultades, carreras, auth, visitantes, usuarios, articulos, comentarios, categorias } = require('../routes');
+const { facultades, carreras, auth, visitantes, usuarios, articulos, comentarios, categorias, participantes } = require('../routes');
 
 /**
  * Esta clase engloba toda la lógica y configuración del servidor
@@ -26,7 +26,8 @@ class Server {
             auth: "/api/auth",
             articulos: "/api/articulos",
             comentarios: "/api/comentarios",
-            categorias: "/api/categorias"
+            categorias: "/api/categorias",
+            participantes: "/api/participantes"
         };
 
         this.middlewares();
@@ -57,6 +58,7 @@ class Server {
         this.app.use( this.paths.articulos, articulos );
         this.app.use( this.paths.comentarios, comentarios );
         this.app.use( this.paths.categorias, categorias );
+        this.app.use( this.paths.participantes, participantes );
     }
 
     /**

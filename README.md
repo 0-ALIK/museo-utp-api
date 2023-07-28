@@ -631,6 +631,8 @@ Retorna todos los artículos de la base de datos
 | ------------ | ------------ | ------------ |
 | `query` - *opcional* | Realizar búsqueda de artículos por su nombre | texto |
 | `categoria` - *opcional* | Realizar búsqueda de artículos por su id de categoria | numérico |
+| `min` - *opcional* | año mínimo | numérico |
+| `max` - *opcional* | año máximo | numérico |
 
 #### Ejemplo de respuesta (application/json)
 
@@ -960,3 +962,35 @@ Si todo sale bien, responde enviando el comentario eliminado con un código *200
 ```
 
 Si algo sale mal, responde con un código de status *400*
+
+---
+---
+## ARTICULOS
+---
+---
+
+### <span style="background-color:#30DAA3; color: white; padding: 2px 5px; border-radius: 50px;">GET</span> /api/participantes/all
+
+Obtener todos los participantes de del proyecto
+
+#### Query params
+
+| Param | Descripción | Validaciones |
+| ------------ | ------------ | ------------ |
+| `departamento` - *opcional* | filtrar por departamento ('API', 'BD', 'APP', 'WEB', 'QA') | texto |
+
+#### Ejemplo de respuesta (application/json)
+
+```json
+[
+    {
+        "id_participante": 1,
+        "nombre": "Flavio",
+        "apellido": "Sánchez",
+        "foto": null,
+        "departamento": "API",
+        "rol": "LIDER"
+    },
+    ...
+]
+```
