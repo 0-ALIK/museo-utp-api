@@ -3,7 +3,7 @@ const querys = require("../helpers/consultas-helper");
 const { getDownloadURL, ref, uploadBytes, deleteObject } = require("firebase/storage");
 const storage = require("../config/fireStorage");
 
-//popula los articulos con sus fotos para el getALL
+//popula los articulos  con sus fotos para el getALL getArticuloFotos
 //result -> articulos
 const populateArticulosFotos = async (result) => {
 	try {
@@ -22,7 +22,7 @@ const populateArticulosFotos = async (result) => {
 				//se itera sobre toda las fotos del articulo y se agrega al array fotos del articulo
 				resultMultimedio.map((articuloMul) =>
 					articuloMultimedio.fotos.push({
-						id: articuloMul.id_multimedio,
+						id: articuloMul.id,
 						url: articuloMul.url,
 						tipo: articuloMul.tipo,
 					})

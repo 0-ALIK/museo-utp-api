@@ -22,8 +22,22 @@ const getAll = async (req = request, res = response) => {
             data.push( req.query.categoria );
         }
 
+        if(req.query.min && req.query.min?.length !== 0) {
+            if(extras.length !== 0)
+                extras+="AND ";
+            extras+="ar.year >= ? ";
+            data.push( req.query.min );
+        }
+
+        if(req.query.max && req.query.max?.length !== 0) {
+            if(extras.length !== 0)
+                extras+="AND ";
+            extras+="ar.year <= ? ";
+            data.push( req.query.max );
+        }
+
         if(extras.length !== 0) {
-            const [ result ] = await conecction.query( querys.getAllArticulos + "WHERE " + extras, data );    
+            const [ result ] = await conecction.query( querys.getAllArticulos + 'WHERE ' + extras + 'ORDER BY ar.year ASC ', data );    
             const articulos = await articulosHelper.populateArticulosFotos(result);
             return res.status(200).json(articulos);
         }

@@ -14,7 +14,7 @@ const validarJWTMiddleware = async ( req, res, next ) => {
         const token = req.header('x-token');
         
         if(!token) {
-            return res.send(401).json({msg: 'no se ha enviado el token'});
+            return res.status(401).json({msg: 'no se ha enviado el token'});
         }
         
         const { usuario, msg } = await validarJWT( token );

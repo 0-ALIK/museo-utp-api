@@ -6,7 +6,10 @@ const { check } = require('express-validator');
 const router = Router();
 
 router.get('/all', [
-    mostrarErrores
+    mostrarErrores,
+    check('categoria', 'categoria debe ser un número').isNumeric(),
+    check('min', 'min debe ser un número').isNumeric(),
+    check('max', 'max debe ser un número').isNumeric(),
 ], getAll);
 
 router.get('/:id', [

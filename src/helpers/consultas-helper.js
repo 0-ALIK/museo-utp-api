@@ -130,7 +130,10 @@ const consultas = {
     WHERE LOWER(ar.nombre) LIKE CONCAT('%', LOWER( ? ), '%')`,
 
     getArticuloFotos: `
-    SELECT * 
+    SELECT 
+    id_multimedio as id,
+    url,
+    tipo
     FROM multimedio
     WHERE tipo like 'imagen' 
     and articulo_id = ?`,
@@ -153,7 +156,7 @@ const consultas = {
 
     getArticuloByIdMultimedios: `
     SELECT 
-    id_multimedio, 
+    id_multimedio as id, 
     url, tipo 
     FROM multimedio 
     WHERE articulo_id = ?`,

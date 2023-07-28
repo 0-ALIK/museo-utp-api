@@ -24,9 +24,13 @@ const login = async (req = request, res = response) => {
         const [ resultUsuario ] = await connection.query( consultas.usuarioByAnyWhere + 'WHERE nombre_usuario = ?', [nombre_usuario]);
         const usuario = resultUsuario[0];
 
-        const isPassCorrect = compareSync( password, usuario.password || '' );
+        if(!usuario) {
+            return res.status(400).json({msg: 'el nombre_usuario / contraseña no son validos'});
+        }
 
-        if(!usuario || !isPassCorrect) {
+        const isPassCorrect = compareSync( password, usuario.password || '' );
+        
+        if(!isPassCorrect) {
             return res.status(400).json({msg: 'el nombre_usuario / contraseña no son validos'});
         }
 
