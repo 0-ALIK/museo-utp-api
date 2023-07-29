@@ -36,6 +36,7 @@ Este proyecto está siendo desarrollado por el equipo de desarrollo del departam
 * [Visitas](#visitantes)
 * [Artículos](#articulos)
 * [Comentarios](#comentarios)
+* [Participantes](#participantes)
 
 Para empezar a utilizar el API, realizar la instalación de todas las dependencias del proyecto, ejecute el siguiente comando en la raíz del proyecto:
 
@@ -965,7 +966,7 @@ Si algo sale mal, responde con un código de status *400*
 
 ---
 ---
-## ARTICULOS
+## PARTICIPANTES
 ---
 ---
 
