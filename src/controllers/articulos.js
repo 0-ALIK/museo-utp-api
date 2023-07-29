@@ -42,7 +42,7 @@ const getAll = async (req = request, res = response) => {
             return res.status(200).json(articulos);
         }
 
-        const [ result ] = await conecction.query( querys.getAllArticulos );
+        const [ result ] = await conecction.query( querys.getAllArticulos + 'ORDER BY ar.year ASC' );
         const articulos = await articulosHelper.populateArticulosFotos(result);
         res.status(200).json(articulos);
     } catch (error) {

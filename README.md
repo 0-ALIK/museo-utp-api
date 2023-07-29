@@ -978,7 +978,7 @@ Obtener todos los participantes de del proyecto
 
 | Param | Descripción | Validaciones |
 | ------------ | ------------ | ------------ |
-| `departamento` - *opcional* | filtrar por departamento ('API', 'BD', 'APP', 'WEB', 'QA') | texto |
+| `departamento` - *opcional* | filtrar por departamento (VISITAS, CONVERSATORIO, VIDEO, CATEGORIA, TUTORIAL, BD, API, WEB, QA, MULTIMEDIOS, APP) | texto |
 
 #### Ejemplo de respuesta (application/json)
 
