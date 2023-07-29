@@ -2,7 +2,10 @@ const connection = require("../config/connection");
 
 const nameRegExp = /^[a-zA-Z0-9_]+$/; 
 const cedulaRegExp = /^([0-9]-[0-9]{3}-[0-9]{4}|[1][0-3]-[0-9]{3}-[0-9]{4}|[2][0]-[0-9]{2}-[0-9]{4}|[E]-[0-9]-[0-9]{6}|[E]-[0-9]{4}-[0-9]{5}|[N]-[0-9]{2}-[0-9]{5}|[N]-[0-9]{3}-[0-9]{4}|[P][E]-[0-9]{3}-[0-9]{4}|[E][E]-[0-9]{3}-[0-9]{3})$/;
-
+//fa.nombre as facultad,
+//es.facultad_id,
+//ca.nombre as carrera,
+//es.carrera_id
 
 /**
  * Si un usuario tiene el rol 'ESTUD' es porque es estudiante,
@@ -19,7 +22,9 @@ const agregarDatosEstudiante = (usuario, result) => {
     usuario.apellido = result[0].apellido;
     usuario.cedula = result[0].cedula;
     usuario.facultad = result[0].facultad;
+    usuario.facultad_id = result[0].facultad_id;
     usuario.carrera = result[0].carrera;
+    usuario.carrera_id = result[0].carrera_id;
     usuario.nivel = result[0].nivel;
     
     if(result[0].foto)

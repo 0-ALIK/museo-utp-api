@@ -19,7 +19,9 @@ const consultas = {
         es.nivel,
         es.foto,
         fa.nombre as facultad,
-        ca.nombre as carrera
+        es.facultad_id,
+        ca.nombre as carrera,
+        es.carrera_id
     FROM estudiante as es
     JOIN facultad as fa
     ON fa.id_facultad = es.facultad_id
@@ -38,7 +40,9 @@ const consultas = {
         es.nivel,
         es.foto,
         fa.nombre as facultad,
-        ca.nombre as carrera
+        es.facultad_id,
+        ca.nombre as carrera,
+        es.carrera_id
     FROM estudiante as es
     JOIN facultad as fa
     ON fa.id_facultad = es.facultad_id
